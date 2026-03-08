@@ -1,0 +1,497 @@
+/* ============================================
+   CART PAGE - LUXURY FASHION STYLES (PURE CSS)
+   ============================================ */
+
+/* Base Transitions & Global Container */
+.cart-page-container {
+  font-family: "Cormorant Garamond", "Georgia", serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  /* Zara uses clean white backgrounds */
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
+
+/* ============================================
+   CART HEADER (DESKTOP DEFAULT)
+   ============================================ */
+.cart-header-section {
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  padding: 2rem 0;
+}
+
+.cart-header-wrapper {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.cart-back-btn {
+  background: transparent;
+  border: none;
+  color: #000;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.cart-back-btn:hover {
+  transform: translateX(-4px);
+}
+
+.cart-title-info {
+  flex: 1;
+}
+
+.cart-main-title {
+  font-size: 32px;
+  font-weight: 300;
+  margin: 0;
+  color: #000;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.cart-item-count {
+  color: #999;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0.5rem 0 0 0;
+}
+
+.cart-clear-all-btn {
+  background: transparent;
+  border: 1px solid #ff4444;
+  color: #ff4444;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.cart-clear-all-btn:hover {
+  background: #ff4444;
+  color: #fff;
+}
+
+/* ============================================
+   CART CONTENT & GRID (DESKTOP)
+   ============================================ */
+.cart-content-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 3rem 60px;
+}
+
+.cart-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 60px;
+}
+
+.cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item-card {
+  display: flex;
+  gap: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item-img-box {
+  width: 150px;
+  height: 200px;
+  background: #f8f8f8;
+  overflow: hidden;
+}
+
+.cart-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cart-item-card:hover .cart-item-img {
+  transform: scale(1.03);
+}
+
+.cart-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.cart-item-name {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.cart-item-remove-btn {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s;
+}
+
+.cart-item-remove-btn:hover {
+  color: #000;
+}
+
+.cart-item-tag {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cart-item-bottom-row {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-qty-selector {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eeeeee;
+}
+
+.qty-btn {
+  background: #fff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+}
+
+.qty-val {
+  padding: 0 15px;
+  font-size: 12px;
+  font-family: sans-serif;
+}
+
+.cart-item-final-price {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* ============================================
+   ORDER SUMMARY (DESKTOP)
+   ============================================ */
+.cart-summary-card {
+  position: sticky;
+  top: 40px;
+  height: fit-content;
+  border: 1px solid #f0f0f0;
+  padding: 30px;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.summary-data-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.summary-data-row span:first-child {
+  color: #666;
+}
+
+.summary-free-badge {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.summary-hr {
+  height: 1px;
+  background: #eee;
+  margin: 20px 0;
+}
+
+.summary-total-row {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.total-label {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cart-checkout-btn {
+  width: 100%;
+  padding: 15px;
+  background: #000;
+  color: #fff;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.cart-continue-btn {
+  width: 100%;
+  padding: 15px;
+  background: transparent;
+  border: 1px solid #ccc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE - ZARA STANDARD (max-width: 480px)
+   ============================================ */
+@media (max-width: 768px) {
+
+  .cart-page-container {
+    background-color: #ffffff;
+    padding-bottom: 120px;
+    /* Space for sticky bar */
+  }
+
+  /* Compact Minimalist Header */
+  .cart-header-section {
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .cart-header-wrapper {
+    padding: 0 15px;
+    gap: 10px;
+  }
+
+  .cart-back-btn {
+    font-size: 18px;
+    padding: 8px;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-main-title {
+    font-size: 14px !important;
+    letter-spacing: 3px !important;
+    text-align: center;
+  }
+
+  .cart-item-count {
+    display: none;
+  }
+
+  .cart-clear-all-btn {
+    font-size: 8px;
+    padding: 8px 12px;
+    border: none;
+    text-decoration: underline;
+    color: #999;
+  }
+
+  /* Content Transitions */
+  .cart-content-container {
+    padding: 15px 10px;
+  }
+
+  .cart-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  /* Zara-Style Item Cards */
+  .cart-items-list {
+    gap: 1px;
+    background-color: #f5f5f5;
+  }
+
+  .cart-item-card {
+    background: #fff;
+    padding: 15px 10px;
+    gap: 15px;
+    border-bottom: none;
+  }
+
+  .cart-item-img-box {
+    width: 90px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .cart-item-content {
+    gap: 5px;
+  }
+
+  .cart-item-name {
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 32px;
+  }
+
+  .cart-item-remove-btn {
+    padding: 10px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-qty-selector {
+    background: #fafafa;
+    border: none;
+  }
+
+  .qty-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 44px;
+    /* Better touch target */
+    min-height: 44px;
+    background: transparent;
+  }
+
+  .qty-val {
+    font-size: 11px;
+  }
+
+  .cart-item-final-price {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  /* Zara-Style Sticky Bottom Summary */
+  .cart-summary-card {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    /* Ensure it's not sticking to top */
+    background: #fff !important;
+    padding: 15px !important;
+    border: none !important;
+    border-top: 1px solid #eeeeee !important;
+    z-index: 9999 !important;
+    /* Extremely high to stay above all content */
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .summary-title,
+  .summary-data-row:not(.summary-total-row),
+  .summary-hr,
+  .cart-continue-btn {
+    display: none;
+    /* Only show total and checkout on mobile sticky */
+  }
+
+  .summary-total-row {
+    display: flex !important;
+    margin-bottom: 15px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .total-label {
+    font-size: 10px;
+    color: #999;
+  }
+
+  .total-value {
+    font-size: 18px !important;
+  }
+
+  .cart-checkout-btn {
+    margin-top: 0;
+    padding: 15px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    min-height: 50px;
+  }
+
+  .summary-shipping-promo {
+    font-size: 9px;
+    color: #ff9800;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* Empty State Mobile */
+  .cart-empty-state {
+    padding: 60px 20px;
+  }
+
+  .cart-empty-title {
+    font-size: 20px !important;
+    letter-spacing: 2px !important;
+  }
+
+  .cart-browse-btn,
+  .cart-home-btn {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 10px;
+  }
+}
+
+/* Utils */
+.cart-outfit-details {
+  font-size: 11px;
+  color: #666;
+  padding: 5px 0;
+}
