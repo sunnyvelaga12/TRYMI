@@ -1,4 +1,9 @@
 {
+  "name": "trymi-root",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd backend && npm install"
+  },
   "dependencies": {
     "mongodb": "^7.1.0"
   }
