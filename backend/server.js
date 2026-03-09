@@ -3324,44 +3324,41 @@ const startServer = async () => {
     // Initialize email service
     await initializeEmailService();
 
-    // ✅ Only listen locally — Vercel handles port binding in production
-    if (process.env.NODE_ENV !== 'production') {
-      app.listen(port, () => {
-        console.log("\n" + "=".repeat(60));
-        console.log("🎉 TRYMI Backend API Server");
-        console.log("=".repeat(60));
-        console.log(`📍 Status: running`);
-        console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
-        console.log(`🔌 Port: ${port}`);
-        console.log(`🔗 URL: http://localhost:${port}`);
-        console.log(`📦 API Products: http://localhost:${port}/api/products`);
-        console.log(`🛍️  API Collections: http://localhost:${port}/api/collections`);
-        console.log(`💝 API Wishlist: http://localhost:${port}/api/wishlist/:userId`);
-        console.log(`🛒 API Cart: http://localhost:${port}/api/cart/:userId`);
-        console.log(`🤖 API Chatbot: http://localhost:${port}/api/chatbot/chat`);
-        console.log(`🎨 API Studio: http://localhost:${port}/api/studio/upload-photo`);
-        console.log(`📧 API Send OTP: http://localhost:${port}/api/auth/send-otp`);
-        console.log(
-          `💾 Database: ${mongoose.connection.readyState === 1
-            ? `✅ Connected (TRYMI / products & user_data)`
-            : "❌ Disconnected"
-          }`,
-        );
-        console.log(
-          `🤖 AI Chatbot: ${chatbotEnabled
-            ? "✅ Enabled (Llama 3.1 8B Instant)"
-            : "❌ Disabled (Configure GROQ_API_KEY)"
-          }`,
-        );
-        console.log(
-          `📧 Email Service: ${emailEnabled
-            ? `✅ Enabled (${process.env.EMAIL_USER})`
-            : "❌ Disabled (Check configuration above)"
-          }`,
-        );
-        console.log("=".repeat(60) + "\n");
-      });
-    }
+    app.listen(port, () => {
+      console.log("\n" + "=".repeat(60));
+      console.log("🎉 TRYMI Backend API Server");
+      console.log("=".repeat(60));
+      console.log(`📍 Status: running`);
+      console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log(`🔌 Port: ${port}`);
+      console.log(`🔗 URL: http://localhost:${port}`);
+      console.log(`📦 API Products: http://localhost:${port}/api/products`);
+      console.log(`🛍️  API Collections: http://localhost:${port}/api/collections`);
+      console.log(`💝 API Wishlist: http://localhost:${port}/api/wishlist/:userId`);
+      console.log(`🛒 API Cart: http://localhost:${port}/api/cart/:userId`);
+      console.log(`🤖 API Chatbot: http://localhost:${port}/api/chatbot/chat`);
+      console.log(`🎨 API Studio: http://localhost:${port}/api/studio/upload-photo`);
+      console.log(`📧 API Send OTP: http://localhost:${port}/api/auth/send-otp`);
+      console.log(
+        `💾 Database: ${mongoose.connection.readyState === 1
+          ? `✅ Connected (TRYMI / products & user_data)`
+          : "❌ Disconnected"
+        }`,
+      );
+      console.log(
+        `🤖 AI Chatbot: ${chatbotEnabled
+          ? "✅ Enabled (Llama 3.1 8B Instant)"
+          : "❌ Disabled (Configure GROQ_API_KEY)"
+        }`,
+      );
+      console.log(
+        `📧 Email Service: ${emailEnabled
+          ? `✅ Enabled (${process.env.EMAIL_USER})`
+          : "❌ Disabled (Check configuration above)"
+        }`,
+      );
+      console.log("=".repeat(60) + "\n");
+    });
 
   } catch (error) {
     console.error("❌ Failed to start server:", error);
