@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://trymi-backend.onrender.com';
 
 export const API_ENDPOINTS = {
   // Collections
@@ -55,3 +55,5 @@ export const API_ENDPOINTS = {
 
 export default API_BASE_URL;
 // force rebuild 
+
+

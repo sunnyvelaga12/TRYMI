@@ -72,7 +72,7 @@ const PhotoUpload = () => {
 
     try {
       console.log('📤 Uploading photo to backend...');
-      const response = await axios.post('http://localhost:3000/api/studio/upload-photo', formData, {
+      const response = await axios.post('https://trymi-backend.onrender.com/api/studio/upload-photo', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
@@ -166,3 +166,5 @@ const PhotoUpload = () => {
 };
 
 export default PhotoUpload;
+
+

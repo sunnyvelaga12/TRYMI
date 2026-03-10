@@ -390,7 +390,7 @@ const ClothingSelector = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/api/studio/generate-tryon",
+        "https://trymi-backend.onrender.com/api/studio/generate-tryon",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -904,3 +904,5 @@ const ClothingSelector = () => {
 };
 
 export default ClothingSelector;
+
+

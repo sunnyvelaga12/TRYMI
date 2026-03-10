@@ -319,7 +319,7 @@ const ChatBot = () => {
         productContext: productContext, // ✅ Include product context
       };
 
-      const response = await fetch("http://localhost:3000/api/chatbot/chat", {
+      const response = await fetch("https://trymi-backend.onrender.com/api/chatbot/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -966,3 +966,5 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
+
+

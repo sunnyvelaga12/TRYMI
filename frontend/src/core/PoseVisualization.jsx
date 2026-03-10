@@ -31,3 +31,5 @@ const PoseVisualization = ({ width = 640, height = 480 }) => {
 };
 
 export default PoseVisualization;
+
+

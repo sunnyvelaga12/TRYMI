@@ -594,3 +594,5 @@ export default {
   currentOutfit,
   OUTFIT_CONFIGURATION
 };
+
+

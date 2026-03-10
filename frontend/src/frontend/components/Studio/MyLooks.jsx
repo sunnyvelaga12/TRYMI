@@ -17,7 +17,7 @@ const MyLooks = () => {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
       const userId = currentUser._id || currentUser.id || 'guest';
 
-      const response = await axios.get(`http://localhost:3000/api/studio/my-looks/${userId}`);
+      const response = await axios.get(`https://trymi-backend.onrender.com/api/studio/my-looks/${userId}`);
       setLooks(response.data.looks || []);
       setLoading(false);
     } catch (error) {
@@ -30,7 +30,7 @@ const MyLooks = () => {
     if (!window.confirm('Are you sure you want to delete this look?')) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/studio/delete-look/${resultId}`);
+      await axios.delete(`https://trymi-backend.onrender.com/api/studio/delete-look/${resultId}`);
       setLooks(looks.filter(look => look._id !== resultId));
       alert('✅ Look deleted successfully');
     } catch (error) {
@@ -68,7 +68,7 @@ const MyLooks = () => {
             <div key={look._id} className="look-card">
               <div className="product-image-wrapper">
                 <img
-                  src={`http://localhost:3000${look.resultImageUrl}`}
+                  src={`https://trymi-backend.onrender.com${look.resultImageUrl}`}
                   alt="Saved look"
                   onClick={() => navigate('/studio/result', {
                     state: { resultId: look._id }
@@ -110,3 +110,5 @@ const MyLooks = () => {
 };
 
 export default MyLooks;
+
+

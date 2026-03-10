@@ -199,3 +199,5 @@ const ClothingController = () => {
 };
 
 export default React.memo(ClothingController);
+
+

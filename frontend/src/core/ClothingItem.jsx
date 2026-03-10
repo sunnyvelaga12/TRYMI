@@ -206,3 +206,5 @@ ClothingItem.defaultProps = {
 };
 
 export default React.memo(ClothingItem);
+
+

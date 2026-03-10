@@ -20,7 +20,7 @@ const TryOnResult = () => {
   const getDisplayUrl = (path) => {
     if (!path) return "";
     if (path.startsWith("http") || path.startsWith("data:")) return path;
-    const API_BASE = "http://localhost:3000";
+    const API_BASE = "https://trymi-backend.onrender.com";
     return `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
   };
 
@@ -46,7 +46,7 @@ const TryOnResult = () => {
   const fetchResult = async (resultId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/studio/result/${resultId}`,
+        `https://trymi-backend.onrender.com/api/studio/result/${resultId}`,
       );
 
       // 🔁 Handle delayed / processing states safely
@@ -89,7 +89,7 @@ const TryOnResult = () => {
       const userId =
         localStorage.getItem("userId") || localStorage.getItem("userEmail");
       if (!userId) return alert("Please login to save looks!");
-      await axios.post("http://localhost:3000/api/studio/save-look", {
+      await axios.post("https://trymi-backend.onrender.com/api/studio/save-look", {
         resultId: result.id,
       });
       alert("✅ Saved to My Looks!");
@@ -281,7 +281,7 @@ const TryOnResult = () => {
                 const userId = localStorage.getItem("userId") || localStorage.getItem("userEmail");
                 if (!userId) return alert("Please login to buy!");
 
-                await axios.post("http://localhost:3000/api/cart/add", {
+                await axios.post("https://trymi-backend.onrender.com/api/cart/add", {
                   userId,
                   productId: result.productId,
                   quantity: 1
@@ -313,3 +313,5 @@ const TryOnResult = () => {
 };
 
 export default TryOnResult;
+
+

@@ -92,7 +92,7 @@ const Collections = () => {
     }
   }, [loading, loadingCaptions.length]);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const API_URL = import.meta.env.VITE_API_URL || "https://trymi-backend.onrender.com";
 
   // Toggle mobile menu
   const toggleMenu = () => {
@@ -827,3 +827,5 @@ const Collections = () => {
 };
 
 export default Collections;
+
+

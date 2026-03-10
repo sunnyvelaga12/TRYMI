@@ -75,7 +75,7 @@ const ForgetPassword = () => {
       );
 
       // Call the backend API to send OTP email
-      const response = await fetch("http://localhost:3000/api/auth/send-otp", {
+      const response = await fetch("https://trymi-backend.onrender.com/api/auth/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +136,7 @@ const ForgetPassword = () => {
     try {
       console.log("📋 Verifying OTP with backend...");
       const response = await fetch(
-        "http://localhost:3000/api/auth/verify-otp",
+        "https://trymi-backend.onrender.com/api/auth/verify-otp",
         {
           method: "POST",
           headers: {
@@ -195,7 +195,7 @@ const ForgetPassword = () => {
     try {
       console.log("🔐 Resetting password via backend...");
       const response = await fetch(
-        "http://localhost:3000/api/auth/reset-password",
+        "https://trymi-backend.onrender.com/api/auth/reset-password",
         {
           method: "POST",
           headers: {
@@ -658,3 +658,5 @@ const ForgetPassword = () => {
 };
 
 export default ForgetPassword;
+
+

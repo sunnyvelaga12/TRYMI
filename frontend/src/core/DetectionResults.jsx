@@ -241,3 +241,5 @@ DetectionResults.defaultProps = {
 };
 
 export default React.memo(DetectionResults);
+
+

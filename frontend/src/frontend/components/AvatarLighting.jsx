@@ -52,3 +52,5 @@ const AvatarLighting = () => {
 };
 
 export default AvatarLighting;
+
+

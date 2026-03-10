@@ -876,3 +876,5 @@ useGLTF.preload('/models/avatar_male.glb');
 useGLTF.preload('/models/female_avatar.glb');
 
 export default RealisticAvatar;
+
+

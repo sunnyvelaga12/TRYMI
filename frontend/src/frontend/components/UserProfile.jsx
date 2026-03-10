@@ -51,7 +51,7 @@ const UserProfile = () => {
   const [feedbackCategory, setFeedbackCategory] = useState("general");
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
-  const API_URL = "http://localhost:3000";
+  const API_URL = "https://trymi-backend.onrender.com";
 
   const showToast = useCallback((message, type = "success") => {
     setToast({ show: true, message, type });
@@ -561,7 +561,7 @@ const UserProfile = () => {
                           src={
                             look.resultImageUrl.startsWith("http")
                               ? look.resultImageUrl
-                              : `http://localhost:3000${look.resultImageUrl}`
+                              : `https://trymi-backend.onrender.com${look.resultImageUrl}`
                           }
                           alt="AI Result"
                           onError={(e) => {
@@ -696,3 +696,5 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+

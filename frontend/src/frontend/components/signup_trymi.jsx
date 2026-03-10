@@ -110,7 +110,7 @@ const SignUp = () => {
 
     try {
       // Send signup request to backend
-      const response = await fetch("http://localhost:3000/api/auth/signup", {
+      const response = await fetch("https://trymi-backend.onrender.com/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -157,7 +157,7 @@ const SignUp = () => {
       console.log("🧹 Fresh cart/wishlist for new account");
 
       // ✅ FETCH USER'S CART & WISHLIST FROM BACKEND (for new accounts this will be empty)
-      const API_URL = "http://localhost:3000";
+      const API_URL = "https://trymi-backend.onrender.com";
       const userId = userData._id;
 
       // Fetch cart from backend
@@ -666,3 +666,5 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+

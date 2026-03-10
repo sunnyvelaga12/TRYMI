@@ -46,7 +46,7 @@ const AdminDashboard = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
 
-      const response = await fetch("http://localhost:3000/api/products", {
+      const response = await fetch("https://trymi-backend.onrender.com/api/products", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -356,7 +356,7 @@ const AdminDashboard = () => {
 
       console.log("📝 Product data:", productData);
 
-      const response = await fetch("http://localhost:3000/api/products", {
+      const response = await fetch("https://trymi-backend.onrender.com/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1239,3 +1239,5 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+

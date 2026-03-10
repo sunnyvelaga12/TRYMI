@@ -20,7 +20,7 @@ export const ProductsProvider = ({ children }) => {
     const timeoutId = setTimeout(() => abortController.abort(), 15000); // 15 second timeout
 
     try {
-      const response = await fetch("http://localhost:3000/api/collections", {
+      const response = await fetch("https://trymi-backend.onrender.com/api/collections", {
         signal: abortController.signal,
       });
 
@@ -131,3 +131,5 @@ export const useProducts = () => {
   }
   return context;
 };
+
+

@@ -103,7 +103,7 @@ renderApp()
 if (import.meta.env.DEV) {
   console.log('🎨 TRYMI Development Mode Active')
   console.log('📁 Running from:', window.location.origin)
-  console.log('🔗 API Base URL: http://localhost:3000') // ✅ CHANGED from 5000 to 3000
+  console.log('🔗 API Base URL: https://trymi-backend.onrender.com') // ✅ CHANGED from 5000 to 3000
 
   // Performance monitoring
   if (typeof performance !== 'undefined') {
@@ -115,3 +115,5 @@ if (import.meta.env.DEV) {
     })
   }
 }
+
+

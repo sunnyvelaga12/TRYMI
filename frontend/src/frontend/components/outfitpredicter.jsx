@@ -1004,3 +1004,5 @@ const OutfitPredictor = () => {
 };
 
 export default OutfitPredictor;
+
+

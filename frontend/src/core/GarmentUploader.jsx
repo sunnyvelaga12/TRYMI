@@ -333,3 +333,5 @@ GarmentUploader.defaultProps = {
 };
 
 export default React.memo(GarmentUploader);
+
+
