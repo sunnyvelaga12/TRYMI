@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDisclosure } from "@chakra-ui/react";
 import QuotaLimitModal from "./QuotaLimitModal";
 import "./ClothingSelector.css";
+import { API_ENDPOINTS } from "../../../config/api";
 
 import useWishlistStore from "../../../store/wishlistStore";
 
@@ -244,11 +245,12 @@ const ClothingSelector = () => {
     return interval;
   };
 
-  // ✅ Check AI service health
+  // ✅ Check AI service health via backend proxy
   const checkAIService = async () => {
     try {
-      const response = await axios.get("https://trymi-ai.onrender.com/health", {
-        timeout: 5000,
+      console.log("🔍 Checking AI service via proxy:", API_ENDPOINTS.AI_HEALTH);
+      const response = await axios.get(API_ENDPOINTS.AI_HEALTH, {
+        timeout: 60000, // 60s for health check (allow Render wake-up)
       });
       return {
         available: true,
@@ -904,6 +906,7 @@ const ClothingSelector = () => {
 };
 
 export default ClothingSelector;
+
 
 
 

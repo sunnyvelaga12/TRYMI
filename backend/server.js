@@ -2819,9 +2819,10 @@ app.post(
       let aiResponse;
       let isPlaceholder = false;
 
-      try {
         // ✅ Call the Python AI service
-        const PYTHON_AI_URL = process.env.PYTHON_AI_URL || "http://localhost:5001";
+        const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
+        console.log(`🤖 Calling AI service at: ${PYTHON_AI_URL}/api/generate-tryon`);
+        
         aiResponse = await axios.post(
           `${PYTHON_AI_URL}/api/generate-tryon`,
           aiServiceData,
@@ -3049,6 +3050,62 @@ app.delete(
     }
   },
 );
+
+// ✅ AI Service Proxy: Status (For health checks and quota)
+app.get("/api/ai-status", async (req, res) => {
+  try {
+    const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
+    console.log(`📡 Proxying AI Status request to: ${PYTHON_AI_URL}/api/ai-status`);
+    
+    const response = await axios.get(`${PYTHON_AI_URL}/api/ai-status`, {
+      timeout: 60000, // 60s for status check to allow Render wake-up
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.warn("⚠️ AI Status Proxy Error:", error.message);
+    res.json({
+      status: "OFFLINE",
+      message: "AI Service is waking up or unreachable",
+      isActive: false,
+      error: error.message
+    });
+  }
+});
+
+// ✅ AI Service Proxy: Health (Direct health endpoint)
+app.get("/api/ai-health", async (req, res) => {
+  try {
+    const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
+    const response = await axios.get(`${PYTHON_AI_URL}/health`, {
+      timeout: 60000,
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.warn("⚠️ AI Health Proxy Error:", error.message);
+    res.json({
+      status: "unhealthy",
+      model_loaded: false,
+      error: error.message
+    });
+  }
+});
+
+// ✅ AI Service Proxy: Quota
+app.get("/api/quota-status", async (req, res) => {
+  try {
+    const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
+    const response = await axios.get(`${PYTHON_AI_URL}/api/quota-status`, {
+      timeout: 60000,
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error("❌ AI Quota Proxy Error:", error.message);
+    res.status(503).json({
+      success: false,
+      error: "AI Quota Service unreachable"
+    });
+  }
+});
 
 // ============================================
 // FEEDBACK ROUTES

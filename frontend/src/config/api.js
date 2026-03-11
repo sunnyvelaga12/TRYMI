@@ -48,9 +48,10 @@ export const API_ENDPOINTS = {
   FEEDBACK: `${API_BASE_URL}/api/feedback`,                              // ✅ Added
   FEEDBACK_USER: (userId) => `${API_BASE_URL}/api/feedback/user/${userId}`, // ✅ Added
 
-  // AI Service status
-  AI_STATUS: `${API_BASE_URL}/api/ai-status`,                            // ✅ Added
-  AI_QUOTA: `${API_BASE_URL}/api/quota-status`,                          // ✅ Added
+  // AI Service status via Backend Proxy
+  AI_STATUS: `${API_BASE_URL}/api/ai-status`,                            // ✅ Proxied
+  AI_HEALTH: `${API_BASE_URL}/api/ai-health`,                            // ✅ Proxied
+  AI_QUOTA: `${API_BASE_URL}/api/quota-status`,                          // ✅ Proxied
 };
 
 export default API_BASE_URL;
