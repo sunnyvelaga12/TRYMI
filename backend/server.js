@@ -19,6 +19,7 @@ import { StudioPhoto } from "./models/StudioPhoto.js";
 import { TryOnResult } from "./models/TryOnResult.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const UPLOADS_BASE_PATH = path.join(__dirname, "../uploads");
 
 // ============================================================
 // ✅ BASE64 → FILE HELPER (FOR WISHLIST TRY-ON)
@@ -32,7 +33,7 @@ const saveBase64Image = (base64String) => {
   const data = match[2];
   const buffer = Buffer.from(data, "base64");
 
-  const dir = path.join(__dirname, "../uploads/wishlist");
+  const dir = path.join(UPLOADS_BASE_PATH, "wishlist");
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -52,17 +53,21 @@ const port = process.env.PORT || 3000;
 // ============================================================
 
 const createUploadDirs = () => {
-  if (process.env.NODE_ENV === 'production') return;
   const dirs = [
-    path.join(__dirname, "../uploads"),
-    path.join(__dirname, "../uploads/studio-photos"),
-    path.join(__dirname, "../uploads/tryon-results"),
+    UPLOADS_BASE_PATH,
+    path.join(UPLOADS_BASE_PATH, "studio-photos"),
+    path.join(UPLOADS_BASE_PATH, "tryon-results"),
+    path.join(UPLOADS_BASE_PATH, "wishlist"),
   ];
 
   dirs.forEach((dir) => {
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-      console.log(`✅ Created directory: ${dir}`);
+      try {
+        fs.mkdirSync(dir, { recursive: true });
+        console.log(`✅ Created directory: ${dir}`);
+      } catch (err) {
+        console.error(`❌ Failed to create directory ${dir}:`, err.message);
+      }
     }
   });
 };
@@ -126,7 +131,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // ✅ SERVE STATIC FILES FOR UPLOADS
 // ============================================================
 
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", express.static(UPLOADS_BASE_PATH));
 
 // ============================================
 // FEEDBACK SCHEMA & MODEL
@@ -189,7 +194,7 @@ const Feedback = mongoose.model("Feedback", feedbackSchema);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/studio-photos");
+    const uploadPath = path.join(UPLOADS_BASE_PATH, "studio-photos");
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -219,7 +224,7 @@ const upload = multer({
 // ✅ Separate multer instance for clothing images
 const clothingStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/studio-photos");
+    const uploadPath = path.join(UPLOADS_BASE_PATH, "studio-photos");
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -2518,17 +2523,28 @@ app.post(
   upload.single("photo"),
   async (req, res) => {
     try {
+      console.log("📸 Studio Photo Upload Request");
       if (!req.file) {
+        console.warn("⚠️ No photo file in request");
         return res.status(400).json({
           success: false,
           error: "No photo uploaded",
         });
       }
 
+      console.log(`📁 Received file: ${req.file.filename} (${req.file.size} bytes)`);
+
       const photoUrl = `/uploads/studio-photos/${req.file.filename}`;
+      let userId = req.body.userId;
+      
+      // Ensure userId is a valid ObjectId if provided, otherwise generate one
+      if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        console.log("ℹ️ No valid userId provided, generating temporary ID or using 'guest' context");
+        userId = new mongoose.Types.ObjectId();
+      }
 
       const studioPhoto = new StudioPhoto({
-        userId: req.body.userId || new mongoose.Types.ObjectId(),
+        userId: userId,
         photoUrl: photoUrl,
         metadata: {
           width: req.body.width || null,
@@ -2539,7 +2555,7 @@ app.post(
 
       await studioPhoto.save();
 
-      console.log("✅ Studio photo uploaded:", studioPhoto._id);
+      console.log("✅ Studio photo saved to DB:", studioPhoto._id);
 
       res.json({
         success: true,
@@ -2754,7 +2770,7 @@ app.post(
       }
 
       // ✅ STEP 8: Prepare AI service request
-      const outputFolder = path.join(projectRoot, "uploads/tryon-results");
+      const outputFolder = path.join(UPLOADS_BASE_PATH, "tryon-results");
 
       // Ensure output folder exists
       if (!fs.existsSync(outputFolder)) {
