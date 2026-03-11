@@ -247,7 +247,7 @@ const ClothingSelector = () => {
   // ✅ Check AI service health
   const checkAIService = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/health", {
+      const response = await axios.get("https://trymi-ai.onrender.com/health", {
         timeout: 5000,
       });
       return {
@@ -464,7 +464,7 @@ const ClothingSelector = () => {
           `❌ Generation Failed\n\n${message}\n\n` +
           `Please check:\n` +
           `• Backend server is running (port 3000)\n` +
-          `• AI service is running (port 5001)\n` +
+          `• AI service is running (Render AI service)\n` +
           `• Your photo was uploaded correctly`,
         );
       } else if (error.code === "ECONNABORTED") {
@@ -475,7 +475,7 @@ const ClothingSelector = () => {
           "• Image files are too large\n" +
           "• Server is overloaded\n\n" +
           "Solutions:\n" +
-          "1. Make sure AI service (port 5001) is running\n" +
+          "1. Make sure AI service (Render AI service) is running\n" +
           "2. Try with a smaller image\n" +
           "3. Restart the backend and AI service",
         );
@@ -484,7 +484,7 @@ const ClothingSelector = () => {
           "🔌 Cannot Connect to Server\n\n" +
           "Make sure:\n" +
           "1. Backend is running on port 3000\n" +
-          "2. AI service is running on port 5001\n" +
+          "2. AI service is running on Render AI service\n" +
           "3. No firewall blocking the connection",
         );
       } else {
@@ -904,5 +904,6 @@ const ClothingSelector = () => {
 };
 
 export default ClothingSelector;
+
 
 

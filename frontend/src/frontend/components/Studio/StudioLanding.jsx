@@ -14,7 +14,7 @@ const StudioLanding = () => {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/ai-status");
+        const response = await axios.get("https://trymi-ai.onrender.com/api/ai-status");
         setAiStatus(response.data);
       } catch (err) {
         setAiStatus({
@@ -181,4 +181,5 @@ const StudioLanding = () => {
 };
 
 export default StudioLanding;
+
 
