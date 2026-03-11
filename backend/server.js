@@ -21,6 +21,9 @@ import { TryOnResult } from "./models/TryOnResult.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_BASE_PATH = path.join(__dirname, "../uploads");
 
+const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
+console.log(`🤖 AI Service URL: ${PYTHON_AI_URL}`);
+
 // ============================================================
 // ✅ BASE64 → FILE HELPER (FOR WISHLIST TRY-ON)
 // ============================================================
@@ -3438,6 +3441,7 @@ const startServer = async () => {
       console.log(`🤖 API Chatbot: http://localhost:${port}/api/chatbot/chat`);
       console.log(`🎨 API Studio: http://localhost:${port}/api/studio/upload-photo`);
       console.log(`📧 API Send OTP: http://localhost:${port}/api/auth/send-otp`);
+      console.log(`🤖 AI Service: ${PYTHON_AI_URL}`);
       console.log(
         `💾 Database: ${mongoose.connection.readyState === 1
           ? `✅ Connected (TRYMI / products & user_data)`
