@@ -50,6 +50,47 @@ UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 quota_manager = initialize_quota_manager(hf_token=HF_TOKEN)
 
 # ============================================================================
+# INITIALIZE MODEL
+# ============================================================================
+
+def load_model():
+    global MODEL_LOADED, tryon_model, MODEL_TYPE
+    try:
+        print("\n" + "="*60)
+        print("📦 INITIALIZING AI ORCHESTRATOR")
+        print("="*60)
+        
+        if not HF_TOKEN:
+            print("⚠️  Warning: HF_TOKEN is missing! AI generations will fail or be heavily rate-limited.")
+        else:
+            print(f"🔑 HF_TOKEN detected: {HF_TOKEN[:4]}...{HF_TOKEN[-4:]}")
+            
+        if FORCE_OVERLAY_ONLY:
+            MODEL_LOADED = False
+            MODEL_TYPE = 'Overlay Only (Forced)'
+            print("⚠️  FORCED OVERLAY MODE ACTIVE")
+            return True
+
+        tryon_model = load_idm_vton_model()
+        if tryon_model:
+            MODEL_LOADED = True
+            MODEL_TYPE = "HuggingFace Orchestrator (Ready)"
+            print(f"✅ AI Model status: {MODEL_TYPE}")
+            return True
+        else:
+            print("❌ Failed to initialize AI Orchestrator")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Load model error: {e}")
+        traceback.print_exc()
+        return False
+
+# Call at global scope for WSGI compatibility
+print("🚀 Startup: Loading AI model...")
+load_model()
+
+# ============================================================================
 # HELPERS
 # ============================================================================
 
@@ -120,29 +161,7 @@ def get_ai_status():
 # MODEL INIT
 # ============================================================================
 
-def load_model():
-    global MODEL_LOADED, tryon_model, MODEL_TYPE
-    try:
-        if FORCE_OVERLAY_ONLY:
-            MODEL_LOADED = False
-            MODEL_TYPE = 'Overlay Only (Forced)'
-            return True
-
-        tryon_model = load_idm_vton_model()
-        if tryon_model:
-            MODEL_LOADED = True
-            MODEL_TYPE = f"HuggingFace: {tryon_model.get('space_id', 'Unknown')}"
-            print(f"✅ AI Model loaded: {MODEL_TYPE}")
-        else:
-            MODEL_LOADED = False
-            MODEL_TYPE = 'Overlay Only'
-            print("⚠️ AI unavailable - overlay mode")
-        return True
-    except Exception as e:
-        MODEL_LOADED = False
-        MODEL_TYPE = 'Overlay Only'
-        print(f"❌ Model load error: {e}")
-        return False
+# AI model is now initialized at global scope
 
 # ============================================================================
 # ENDPOINTS
@@ -319,8 +338,7 @@ def internal_error(error):
 
 if __name__ == '__main__':
     print("\n" + "="*60)
-    print("🚀 TRYMI AI SERVICE")
+    print("🚀 TRYMI AI SERVICE (Standalone)")
     print("="*60)
-    load_model()
     port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port, debug=False, threaded=True, use_reloader=False)

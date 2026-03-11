@@ -1,13 +1,12 @@
-const express = require('express');
-const router = express.Router();
+﻿const express = require('express');
+const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
 const studioController = require('../controllers/studioController');
 
-// Use memory storage - no filesystem needed (works on Render)
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|webp/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());

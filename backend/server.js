@@ -2798,16 +2798,33 @@ app.post(
 
       console.log(`🏷️  Category Mapping: "${rawCategory}" -> "${aiCategory}"`);
 
-      // ✅ FIX: Python service expects 'clothingItems' list, not single path
+      // ✅ PRODUCTION FIX: Backend and AI Service are on different servers.
+      // We must send images as Base64 because they don't share a filesystem.
+      console.log("📂 Reading images for AI service...");
+      let personImageBase64 = "";
+      let clothingImageBase64 = "";
+
+      try {
+        const pBuffer = fs.readFileSync(personImageFullPath);
+        personImageBase64 = `data:image/jpeg;base64,${pBuffer.toString("base64")}`;
+        
+        const cBuffer = fs.readFileSync(clothingImageFullPath);
+        clothingImageBase64 = `data:image/jpeg;base64,${cBuffer.toString("base64")}`;
+
+        console.log("✅ Images converted to Base64");
+      } catch (readError) {
+        console.error("❌ Error reading images for Base64 conversion:", readError.message);
+        throw new Error("Failed to read images for AI service");
+      }
+
       const aiServiceData = {
-        personImagePath: personImageFullPath,
+        personImageBase64: personImageBase64,
         clothingItems: [
           {
-            clothingImagePath: clothingImageFullPath,
+            imageUrl: clothingImageBase64,
             category: aiCategory,
           },
         ],
-        outputFolder: outputFolder,
       };
 
       console.log("🤖 Calling AI service with data:");
