@@ -130,59 +130,20 @@ const loadedTextures = new Map();
 // ✅ NEW: Normalize category names to match configuration
 const normalizeCategory = (category) => {
   if (!category) return null;
-  
-  const lower = category.toLowerCase().trim();
-  
-  // Direct mapping of database categories to configuration keys
+  const lower = category.toLowerCase().trim().replace(/_/g, '-').replace(/\s+/g, ' ');
   const categoryMap = {
-    // Shirts variations
-    'shirt': 'Shirts',
-    'shirts': 'Shirts',
-    
-    // T-Shirts variations
-    'tshirt': 'T-Shirts',
-    't-shirt': 'T-Shirts',
-    't-shirts': 'T-Shirts',
-    'tshirts': 'T-Shirts',
-    
-    // Tops variations
-    'top': 'Tops',
-    'tops': 'Tops',
-    
-    // Jackets variations
-    'jacket': 'Jackets',
-    'jackets': 'Jackets',
-    
-    // Coats variations
-    'coat': 'Coats',
-    'coats': 'Coats',
-    
-    // Pants variations
-    'pant': 'Pants',
-    'pants': 'Pants',
-    
-    // Bottoms variations
-    'bottom': 'Bottoms',
-    'bottoms': 'Bottoms',
-    
-    // Dresses variations
-    'dress': 'Dresses',
-    'dresses': 'Dresses',
-    
-    // Kids variations
-    'kids top': 'Kids Tops',
-    'kids tops': 'Kids Tops',
-    'kids bottom': 'Kids Bottoms',
-    'kids bottoms': 'Kids Bottoms',
-    'kids dress': 'Kids Dresses',
-    'kids dresses': 'Kids Dresses',
-    'kids outerwear': 'Kids Outerwear',
-    
-    // Accessories variations
-    'accessory': 'Accessories',
-    'accessories': 'Accessories',
+    'shirt': 'Shirts', 'shirts': 'Shirts', 'kids-shirts': 'Shirts', 'kids-shirt': 'Shirts',
+    'tshirt': 'T-Shirts', 't-shirt': 'T-Shirts', 't-shirts': 'T-Shirts', 'tshirts': 'T-Shirts',
+    'kids-tshirt': 'T-Shirts', 'kids-tshirts': 'T-Shirts', 'kids t-shirts': 'T-Shirts',
+    'top': 'Tops', 'tops': 'Tops', 'kids-top': 'Kids Tops', 'kids-tops': 'Kids Tops', 'kids tops': 'Kids Tops',
+    'jacket': 'Jackets', 'jackets': 'Jackets', 'kids-jacket': 'Kids Outerwear', 'kids-jackets': 'Kids Outerwear',
+    'coat': 'Coats', 'coats': 'Coats', 'kids-coat': 'Kids Outerwear', 'kids outerwear': 'Kids Outerwear', 'kids-outerwear': 'Kids Outerwear',
+    'pant': 'Pants', 'pants': 'Pants', 'kids-pants': 'Kids Bottoms', 'kids-pant': 'Kids Bottoms',
+    'bottom': 'Bottoms', 'bottoms': 'Bottoms', 'kids-bottom': 'Kids Bottoms', 'kids-bottoms': 'Kids Bottoms', 'kids bottoms': 'Kids Bottoms',
+    'dress': 'Dresses', 'dresses': 'Dresses', 'kids-dress': 'Kids Dresses', 'kids-dresses': 'Kids Dresses', 'kids dresses': 'Kids Dresses',
+    'kids top': 'Kids Tops', 'kids bottom': 'Kids Bottoms',
+    'accessory': 'Accessories', 'accessories': 'Accessories', 'kids-accessories': 'Accessories',
   };
-  
   return categoryMap[lower] || category;
 };
 
@@ -598,3 +559,4 @@ export default {
 
 
 // rebuild 
+
