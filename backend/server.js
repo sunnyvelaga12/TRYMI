@@ -2819,6 +2819,7 @@ app.post(
       let aiResponse;
       let isPlaceholder = false;
 
+      try {
         // ✅ Call the Python AI service
         const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
         console.log(`🤖 Calling AI service at: ${PYTHON_AI_URL}/api/generate-tryon`);
