@@ -22,6 +22,8 @@ MODEL_LOADED = False
 tryon_model = None
 MODEL_TYPE = 'Overlay Only'
 FORCE_OVERLAY_ONLY = False
+LAST_INIT_ERROR = None
+INITIALIZED_AT = None
 
 # Import utils
 from utils.image_preprocessing import preprocess_image
@@ -54,8 +56,9 @@ quota_manager = initialize_quota_manager(hf_token=HF_TOKEN)
 # ============================================================================
 
 def load_model():
-    global MODEL_LOADED, tryon_model, MODEL_TYPE
+    global MODEL_LOADED, tryon_model, MODEL_TYPE, INITIALIZED_AT
     try:
+        INITIALIZED_AT = time.strftime("%Y-%m-%d %H:%M:%S")
         print("\n" + "="*60)
         print("📦 INITIALIZING AI ORCHESTRATOR")
         print("="*60)
@@ -82,13 +85,15 @@ def load_model():
             return False
             
     except Exception as e:
+        global LAST_INIT_ERROR
+        LAST_INIT_ERROR = str(e)
         print(f"❌ Load model error: {e}")
         traceback.print_exc()
         return False
 
-# Call at global scope for WSGI compatibility
-print("🚀 Startup: Loading AI model...")
-load_model()
+# WSGI Compatibility: load_model will be called on the first request via Lazy Loading
+print("🚀 Startup: AI service initialized (Lazy Loading READY)")
+# NO load_model() here at top level to prevent startup timeouts
 
 # ============================================================================
 # HELPERS
@@ -174,6 +179,10 @@ def health_check():
         'service': 'TRYMI Virtual Try-On',
         'model_type': MODEL_TYPE,
         'model_loaded': MODEL_LOADED,
+        'init_error': LAST_INIT_ERROR,
+        'initialized_at': INITIALIZED_AT,
+        'hf_token_present': bool(HF_TOKEN),
+        'hf_token_prefix': HF_TOKEN[:6] if HF_TOKEN else None
     })
 
 @app.route('/api/ai-status', methods=['GET'])
@@ -212,6 +221,11 @@ def generate_tryon_endpoint():
     start_time = time.time()
 
     try:
+        # Lazy Loading Guard: Ensure model is loaded before processing
+        if not MODEL_LOADED:
+            print("🛡️ Lazy Loading: Triggering model initialization...")
+            load_model()
+
         data = request.get_json()
         if not data:
             return jsonify({'success': False, 'error': 'No JSON data received'}), 400

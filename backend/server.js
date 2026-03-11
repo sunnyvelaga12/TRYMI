@@ -2853,9 +2853,16 @@ app.post(
         );
 
         console.log("✅ AI service response received");
+        console.log("   Status:", aiResponse.status);
         console.log("   Result URL:", aiResponse.data.resultImageUrl);
+        console.log("   Processing Time:", aiResponse.data.processingTime);
       } catch (aiError) {
-        console.error("❌ AI service error:", aiError.message);
+        console.error("❌ AI service error details:");
+        console.error("   Message:", aiError.message);
+        if (aiError.response) {
+          console.error("   Status:", aiError.response.status);
+          console.error("   Data:", JSON.stringify(aiError.response.data));
+        }
 
         // ✅ Return selected outfit image as fallback instead of placeholder
         isPlaceholder = true;
@@ -3094,6 +3101,7 @@ app.get("/api/ai-status", async (req, res) => {
 app.get("/api/ai-health", async (req, res) => {
   try {
     const PYTHON_AI_URL = process.env.PYTHON_AI_URL || process.env.AI_SERVICE_URL || "http://localhost:5001";
+    console.log(`📡 Proxying AI Health request to: ${PYTHON_AI_URL}/health`);
     const response = await axios.get(`${PYTHON_AI_URL}/health`, {
       timeout: 60000,
     });
