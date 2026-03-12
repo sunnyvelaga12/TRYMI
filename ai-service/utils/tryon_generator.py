@@ -86,6 +86,7 @@ def load_idm_vton_model():
     print("="*60)
     
     if not HF_TOKENS:
+        
         print(f" ⚠️  No HF tokens detected. Public spaces will be heavily rate-limited.")
     else:
         print(f" 🔑 {len(HF_TOKENS)} HF token(s) detected. Ready for authenticated rotation.")
@@ -111,6 +112,25 @@ def create_client(space_id, token_index=0):
     except Exception as e:
         print(f"      ⚠️  Connection failed: {str(e)[:100]}")
         return None
+
+def _wake_up_space(space_id, token=None):
+    """Ping HF space status API to wake it from sleep before calling it."""
+    try:
+        space_slug = space_id.replace("/", "-").lower()
+        url = f"https://huggingface.co/api/spaces/{space_id}/status"
+        headers = {"Authorization": f"Bearer {token}"} if token else {}
+        resp = requests.get(url, headers=headers, timeout=10)
+        status = resp.json().get("stage", "unknown")
+        print(f"   🔔 Space {space_id} status: {status}")
+        if status in ("SLEEPING", "STOPPED", "BUILDING"):
+            print(f"   ⏳ Space is sleeping — sending wake-up request...")
+            # Hit the space root to trigger wake-up
+            wake_url = f"https://{space_id.replace('/', '-')}.hf.space/"
+            requests.get(wake_url, headers=headers, timeout=5)
+            print(f"   💤 Wake-up sent. Waiting 15s for space to start...")
+            time.sleep(15)
+    except Exception as e:
+        print(f"   ⚠️  Wake-up ping failed (non-critical): {e}")
 
 # ============================================================================
 # THE "SPACE-HOPPER" GENERATOR
@@ -158,6 +178,10 @@ def _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, 
                 continue
 
             print(f"   📡 [PRODUCTION TIER] Attempting: {space_id}...")
+            
+            # Wake up space before attempting
+            token = HF_TOKENS[0] if HF_TOKENS else None
+            _wake_up_space(space_id, token)
             
             # ✅ PRODUCTION STEP: Smart Retry Logic with Token Rotation
             max_retries = len(HF_TOKENS) if HF_TOKENS else 1

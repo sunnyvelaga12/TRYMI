@@ -9,6 +9,7 @@ from pathlib import Path
 from PIL import Image
 from dotenv import load_dotenv
 import requests
+from datetime import datetime
 
 load_dotenv()
 
@@ -185,8 +186,27 @@ def get_ai_status():
 # ENDPOINTS
 # ============================================================================
 
+_health_call_count = 0
+
 @app.route('/health', methods=['GET'])
 def health_check():
+    global _health_call_count
+    _health_call_count += 1
+    
+    # Every 20 health checks (~100 seconds), ping HF spaces to keep them warm
+    if _health_call_count % 20 == 0:
+        try:
+            primary_spaces = ["yisol/IDM-VTON", "franciszzj/Leffa"]
+            token = os.getenv("HF_TOKEN")
+            headers = {"Authorization": f"Bearer {token}"} if token else {}
+            for space in primary_spaces:
+                space_slug = space.replace("/", "-").lower()
+                url = f"https://{space_slug}.hf.space/"
+                requests.get(url, headers=headers, timeout=5)
+                print(f"   🔔 Kept warm: {space}")
+        except Exception as e:
+            print(f"   ⚠️  Warm-up ping failed: {e}")
+
     return jsonify({
         'status': 'healthy',
         'service': 'TRYMI Virtual Try-On',
@@ -195,7 +215,8 @@ def health_check():
         'init_error': LAST_INIT_ERROR,
         'initialized_at': INITIALIZED_AT,
         'hf_token_present': bool(HF_TOKEN),
-        'hf_token_prefix': HF_TOKEN[:6] if HF_TOKEN else None
+        'hf_token_prefix': HF_TOKEN[:6] if HF_TOKEN else None,
+        'timestamp': datetime.now().isoformat()
     })
 
 @app.route('/api/ai-status', methods=['GET'])
