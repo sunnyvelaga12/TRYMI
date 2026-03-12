@@ -4,7 +4,7 @@ python-dotenv==1.0.1
 pillow==11.1.0 
 numpy==1.26.3
 opencv-python==4.9.0.80
-mediapipe==0.10.9
+mediapipe==0.10.21
 requests==2.31.0
 gradio_client==2.0.3
 gunicorn==23.0.0
