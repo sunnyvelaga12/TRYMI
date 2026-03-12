@@ -51,6 +51,11 @@ const saveBase64Image = (base64String) => {
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Health check endpoint for deployment monitoring
+app.get("/health", (req, res) => {
+  res.json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+
 // ============================================================
 // ✅ CREATE UPLOAD DIRECTORIES
 // ============================================================
