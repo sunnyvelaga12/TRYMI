@@ -9,6 +9,7 @@ from gradio_client import Client, handle_file
 import shutil
 from dotenv import load_dotenv
 import cv2
+import base64
 
 # Multi-token rotation for ZeroGPU quota maximization
 HF_TOKENS = [
@@ -854,8 +855,14 @@ def _simple_overlay_fallback(person_image, clothing_image, category='upper_body'
         return person_image
 
 def _path_to_url(full_path, filename):
-    """Local helper to generate URL for logging"""
-    return f"/uploads/tryon-results/{filename}"
+    """Convert saved image to base64 for cloud deployment"""
+    try:
+        with open(full_path, 'rb') as f:
+            b64 = base64.b64encode(f.read()).decode('utf-8')
+        return f"data:image/jpeg;base64,{b64}"
+    except Exception as e:
+        print(f"   ⚠️  Base64 conversion failed: {e}")
+        return f"/uploads/tryon-results/{filename}"
 
 def _professional_post_process(image, category=None, pose_data=None):
     """

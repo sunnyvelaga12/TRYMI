@@ -15,7 +15,20 @@ load_dotenv()
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-HF_TOKEN = os.getenv('HF_TOKEN', '')
+def get_best_hf_token():
+    tokens = [
+        os.getenv('HF_TOKEN', ''),
+        os.getenv('HF_TOKEN_BACKUP', ''),
+        os.getenv('HF_TOKEN_BACKUP2', ''),
+    ]
+    for token in tokens:
+        if token and token.startswith('hf_') and len(token) > 20:
+            print(f"Using HF token: {token[:6]}...{token[-4:]}")
+            return token
+    print("WARNING: No valid HF token found!")
+    return ''
+
+HF_TOKEN = get_best_hf_token()
 AI_SPACES = ["yisol/IDM-VTON", "kwai-kolors/Kolors-Virtual-Try-On"]
 
 MODEL_LOADED = False
@@ -295,10 +308,13 @@ def generate_tryon_endpoint():
         )
         print(f"   ✅ Result: {result_image_path}")
 
-        # Step 5: Convert result to base64 for response
+        # Step 5: Convert result to base64 for response (if not already)
         print("📋 Step 5: Converting result to base64...")
-        result_pil = Image.open(result_image_path).convert('RGB')
-        result_base64 = pil_to_base64(result_pil)
+        if result_image_path.startswith('data:image'):
+            result_base64 = result_image_path  # already base64 from generate_tryon
+        else:
+            result_pil = Image.open(result_image_path).convert('RGB')
+            result_base64 = pil_to_base64(result_pil)
 
         # Step 6: Animation (optional)
         animated_base64 = None
