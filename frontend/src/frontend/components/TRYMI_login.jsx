@@ -66,22 +66,39 @@ const TrymiLogin = () => {
       return;
     }
 
-    const users = getStoredUsers();
-    console.log("Attempting login with:", trimmedEmail);
-    console.log("Available users:", users);
+    setIsShaking(false); // Make sure we have an isLoading state, or at least don't block
+    
+    try {
+      // ✅ FIXED: Call backend login API instead of checking localStorage
+      const response = await fetch("https://trymi-backend.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          password: trimmedPassword,
+        }),
+      });
 
-    // Case-insensitive email matching
-    const user = users.find(
-      (u) =>
-        u.email.toLowerCase() === trimmedEmail.toLowerCase() &&
-        u.password === trimmedPassword,
-    );
+      const data = await response.json();
+      
+      console.log("Login response:", data);
 
-    if (user) {
+      if (!response.ok) {
+        showMessage("danger", data.message || "Invalid credentials");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 500);
+        return;
+      }
+
+      // Successful login
+      const user = data.user;
+      
       // ✅ FIXED: Save complete user data including ID
       const userData = {
-        _id: user.id || user._id || user.email, // Use user ID if available, fallback to email
-        id: user.id || user._id || user.email,
+        _id: user._id || user.id || user.email, 
+        id: user._id || user.id || user.email,
         name: user.name,
         email: user.email,
         gender: user.gender,
@@ -93,35 +110,28 @@ const TrymiLogin = () => {
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("userId", userData._id); // ⭐ KEY LINE
       localStorage.setItem("isAuthenticated", "true");
-
-      // Cart/wishlist now fetched from backend by userId
-      console.log("✅ User-specific cart/wishlist will load from backend");
-
-      if (user) {
-        // ✅ SAVE USER DATA (instant)
-        const userData = {
-          _id: user.id || user._id || user.email,
-          id: user.id || user._id || user.email,
-          name: user.name,
-          email: user.email,
-          gender: user.gender,
-          loginTime: new Date().toISOString(),
-        };
-
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("userId", userData._id);
-        localStorage.setItem("isAuthenticated", "true");
-
-        console.log("✅ INSTANT LOGIN:", userData._id);
-
-        showMessage("success", "Login successful!");
-        setEmail("");
-        setPassword("");
-
-        // 🔥 IMMEDIATE REDIRECT - 0.3s total
-        navigate("/outfit-predictor", { replace: true });
+      
+      // Optionally store the token if the backend returns it
+      if (data.token) {
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("token", data.token);
       }
+
+      console.log("✅ User-specific cart/wishlist will load from backend");
+      console.log("✅ INSTANT LOGIN:", userData._id);
+
+      showMessage("success", "Login successful!");
+      setEmail("");
+      setPassword("");
+
+      // 🔥 IMMEDIATE REDIRECT - 0.3s total
+      setTimeout(() => navigate("/outfit-predictor", { replace: true }), 300);
+      
+    } catch (error) {
+      console.error("Login error:", error);
+      showMessage("danger", "Network error. Please try again.");
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 500);
     }
   };
 
