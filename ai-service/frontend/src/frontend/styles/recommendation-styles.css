@@ -1,0 +1,99 @@
+.match-section {
+  margin-bottom: 40px;
+}
+
+.match-section-title {
+  color: #28a745;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.match-stars {
+  color: #ffd700;
+  font-size: 1.2em;
+}
+
+.match-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.outfit-card {
+  position: relative;
+}
+
+.match-quality {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(40, 167, 69, 0.9);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.perfect-match .match-quality {
+  background: rgba(255, 215, 0, 0.9);
+  color: #000;
+}
+
+.great-match .match-quality {
+  background: rgba(40, 167, 69, 0.9);
+}
+
+.good-match .match-quality {
+  background: rgba(23, 162, 184, 0.9);
+}
+
+.fair-match .match-quality,
+.basic-match .match-quality {
+  background: rgba(108, 117, 125, 0.9);
+}
+
+.match-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.match-detail {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.outfit-card:hover .match-quality {
+  transform: scale(1.05);
+}
+
+.outfit-card:hover .match-details {
+  opacity: 1;
+}
+
+/* Animation for new cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.outfit-card {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}

@@ -1,0 +1,15 @@
+{
+  "status": "available",
+  "api_quota_reset": null,
+  "spaces_quota_reset": null,
+  "last_error": "You have exceeded your GPU quota (120s requested vs. 0s left). Try again in 0:00:00",
+  "api_attempts": 0,
+  "spaces_attempts": 21,
+  "last_updated": "2026-03-06T17:54:02.400968",
+  "space_cooldowns": {
+    "FIT-Check/CatVTON::token0": "2026-02-26T15:53:05.517605",
+    "FIT-Check/CatVTON::token1": "2026-02-26T15:53:27.977790",
+    "FIT-Check/CatVTON::token2": "2026-02-26T15:53:47.577312",
+    "franciszzj/Leffa::token0": "2026-03-06T18:04:02.400445"
+  }
+}

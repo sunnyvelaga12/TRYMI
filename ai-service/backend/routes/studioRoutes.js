@@ -1,0 +1,27 @@
+﻿const express = require('express');
+const router = require('express').Router();
+const multer = require('multer');
+const path = require('path');
+const studioController = require('../controllers/studioController');
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    if (mimetype && extname) return cb(null, true);
+    cb(new Error('Only image files are allowed!'));
+  }
+});
+
+router.post('/upload-photo', upload.single('photo'), studioController.uploadPhoto);
+router.post('/upload-clothing', upload.single('clothingImage'), studioController.uploadClothing);
+router.post('/generate-tryon', studioController.generateTryOn);
+router.get('/result/:resultId', studioController.getResult);
+router.post('/save-look', studioController.saveLook);
+router.get('/my-looks/:userId', studioController.getMyLooks);
+router.delete('/delete-look/:resultId', studioController.deleteLook);
+
+module.exports = router;

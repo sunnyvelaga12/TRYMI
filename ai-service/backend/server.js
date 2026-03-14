@@ -51,11 +51,6 @@ const saveBase64Image = (base64String) => {
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Health check endpoint for deployment monitoring
-app.get("/health", (req, res) => {
-  res.json({ status: "healthy", timestamp: new Date().toISOString() });
-});
-
 // ============================================================
 // ✅ CREATE UPLOAD DIRECTORIES
 // ============================================================
@@ -2658,7 +2653,6 @@ app.post(
       // ✅ STEP 3: Determine clothing image path (PRIORITY ORDER)
       let clothingPath = null;
       let clothingSource = "";
-      let itemTitle = "Garment"; // Default title
       let rawCategory = req.body.category || "upper_body";
 
       // Priority 1: Product from database
@@ -2668,7 +2662,6 @@ app.post(
           if (product && product.image) {
             clothingPath = product.image;
             rawCategory = product.category || rawCategory;
-            itemTitle = product.name; // Use product name as title
             clothingSource = `Product: ${product.name}`;
             console.log("👕 Using product image:", product.name);
             console.log("   Category from product:", rawCategory);
@@ -2689,7 +2682,6 @@ app.post(
       // Priority 3: Uploaded file
       if (!clothingPath && req.file) {
         clothingPath = `/uploads/studio-photos/${req.file.filename}`;
-        itemTitle = req.file.originalname.split('.')[0]; // Use filename as title slug
         clothingSource = `Uploaded file: ${req.file.filename}`;
         console.log("👕 Using uploaded file:", req.file.filename);
       }
@@ -2834,7 +2826,6 @@ app.post(
           {
             imageUrl: clothingImageBase64,
             category: aiCategory,
-            title: itemTitle,
           },
         ],
       };

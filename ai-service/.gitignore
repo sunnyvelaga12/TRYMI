@@ -35,7 +35,5 @@ audit_log.txt
 
 # OS files
 .DS_Store
-Thumbs.db
-
-# Database restore files
-backend/data_restore/
+Thumbs.db"backend/data_restore/" 
+backend/data_restore/ 

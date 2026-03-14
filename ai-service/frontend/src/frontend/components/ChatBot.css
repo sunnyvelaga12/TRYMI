@@ -1,0 +1,393 @@
+/* ============================================================
+   ✨ MINIMALIST LUXURY CHATBOT - ZARA AESTHETIC
+   ============================================================ */
+
+/* ==================== VARIABLES ==================== */
+:root {
+  --chat-primary: #000000;
+  --chat-secondary: #333333;
+  --chat-accent: #666666;
+  --chat-bg: #ffffff;
+  --chat-surface: #ffffff;
+  --chat-border: #e5e5e5;
+  --chat-input-bg: #f9f9f9;
+  --chat-text-primary: #000000;
+  --chat-text-secondary: #666666;
+  --chat-radius-lg: 0px;
+  --chat-radius-md: 0px;
+  --chat-radius-sm: 0px;
+  --chat-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --chat-font: 'Inter', -apple-system, sans-serif;
+}
+
+/* ==================== TOGGLE BUTTON ==================== */
+.chat-toggle-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 0;
+  /* Sharp corners */
+  background: var(--chat-primary);
+  border: none;
+  color: white;
+  cursor: pointer;
+  box-shadow: var(--chat-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10000;
+}
+
+.chat-toggle-btn:hover {
+  transform: translateY(-2px);
+  background: var(--chat-secondary);
+}
+
+.chat-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  background: white;
+  color: black;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 0 4px;
+  border: 1px solid black;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==================== CHAT CONTAINER ==================== */
+.chat-container {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  width: 400px;
+  max-width: calc(100vw - 48px);
+  height: 600px;
+  max-height: calc(100vh - 120px);
+  background: var(--chat-surface);
+  border-radius: 0;
+  border: 1px solid var(--chat-border);
+  box-shadow: var(--chat-shadow);
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== HEADER ==================== */
+.chat-header {
+  background: var(--chat-bg);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--chat-border);
+  cursor: move;
+}
+
+.chat-header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--chat-input-bg);
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1px solid var(--chat-border);
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--chat-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.chat-header p {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  color: var(--chat-text-secondary);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.chat-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--chat-text-secondary);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.chat-icon-btn:hover {
+  color: var(--chat-text-primary);
+  background: var(--chat-input-bg);
+}
+
+/* ==================== MESSAGES AREA ==================== */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--chat-bg);
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  animation: fadeIn 0.3s ease;
+}
+
+.user-message {
+  align-self: flex-end;
+}
+
+.assistant-message {
+  align-self: flex-start;
+}
+
+.message-content {
+  padding: 12px 16px;
+  border-radius: 0;
+  line-height: 1.5;
+  font-size: 13px;
+  word-wrap: break-word;
+}
+
+.user-message .message-content {
+  background: var(--chat-primary);
+  color: white;
+}
+
+.assistant-message .message-content {
+  background: var(--chat-input-bg);
+  color: var(--chat-text-primary);
+  border: 1px solid var(--chat-border);
+}
+
+.message-time {
+  font-size: 10px;
+  color: var(--chat-text-secondary);
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+/* ==================== INPUT FORM ==================== */
+.chat-input-form {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--chat-bg);
+  border-top: 1px solid var(--chat-border);
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--chat-border);
+  border-radius: 0;
+  font-size: 13px;
+  background: var(--chat-input-bg);
+  color: var(--chat-text-primary);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.chat-input:focus {
+  border-color: var(--chat-primary);
+  background: white;
+}
+
+.chat-send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  background: var(--chat-primary);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.chat-send-btn:hover:not(:disabled) {
+  background: var(--chat-secondary);
+}
+
+/* ==================== SUGGESTIONS ==================== */
+.suggestion-chip {
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid var(--chat-border);
+  border-radius: 0;
+  font-size: 11px;
+  color: var(--chat-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.suggestion-chip:hover {
+  background: var(--chat-primary);
+  color: white;
+  border-color: var(--chat-primary);
+}
+
+/* ==================== ATTACHMENTS ==================== */
+.attach-btn {
+  background: transparent;
+  color: var(--chat-text-secondary);
+  padding: 8px;
+  border-radius: 0;
+  transition: color 0.2s ease;
+}
+
+.attach-btn:hover {
+  color: var(--chat-text-primary);
+  background: var(--chat-input-bg);
+}
+
+.attach-badge {
+  background: var(--chat-primary);
+  border-radius: 0;
+  font-size: 9px;
+}
+
+.attached-files-container {
+  background: var(--chat-input-bg);
+  border-top: 1px solid var(--chat-border);
+  padding: 8px 12px;
+}
+
+.file-preview {
+  background: white;
+  border: 1px solid var(--chat-border);
+  border-radius: 0;
+}
+
+.file-preview-image,
+.file-preview-icon {
+  border-radius: 0;
+}
+
+.attach-menu {
+  background: white;
+  border: 1px solid var(--chat-border);
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.attach-menu-item {
+  color: var(--chat-text-primary);
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 10px 16px;
+}
+
+.attach-menu-item:hover {
+  background: var(--chat-input-bg);
+}
+
+/* ==================== QUICK PROMPTS ==================== */
+.quick-prompts {
+  background: var(--chat-bg);
+  padding: 0 20px 16px;
+}
+
+.quick-prompts-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--chat-text-secondary);
+  margin-bottom: 8px;
+}
+
+.quick-prompt-btn {
+  background: white;
+  border: 1px solid var(--chat-border);
+  border-radius: 0;
+  color: var(--chat-text-primary);
+  font-size: 12px;
+  padding: 10px 14px;
+}
+
+.quick-prompt-btn:hover {
+  background: var(--chat-input-bg);
+  border-color: var(--chat-text-primary);
+}
+
+/* ==================== MOBILE ==================== */
+@media (max-width: 480px) {
+  .chat-container {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border: none;
+  }
+
+  .chat-toggle-btn {
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/* ==================== TYPING INDICATOR ==================== */
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.typing-indicator span {
+  width: 4px;
+  height: 4px;
+  background: var(--chat-text-secondary);
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out;
+}

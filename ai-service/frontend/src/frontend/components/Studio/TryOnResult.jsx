@@ -301,6 +301,12 @@ const TryOnResult = () => {
         <button className="btn-secondary-studio" onClick={downloadImage}>
           ⬇️ Download
         </button>
+        <button
+          className="btn-secondary-studio"
+          onClick={() => navigate("/studio")}
+        >
+          🏠 Studio
+        </button>
       </div>
     </div>
   );

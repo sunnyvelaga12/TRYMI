@@ -15,7 +15,6 @@ import {
   FaCog,
   FaFire,
   FaCommentDots,
-  FaSignOutAlt,
 } from "react-icons/fa";
 import "../styles/outfitpredictor.css";
 import useWishlistStore from "../../store/wishlistStore";

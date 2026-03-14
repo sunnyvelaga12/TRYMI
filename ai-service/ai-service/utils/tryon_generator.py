@@ -9,7 +9,6 @@ from gradio_client import Client, handle_file
 import shutil
 from dotenv import load_dotenv
 import cv2
-import base64
 
 # Multi-token rotation for ZeroGPU quota maximization
 HF_TOKENS = [
@@ -19,10 +18,6 @@ HF_TOKENS = [
 ]
 # Strip empty tokens
 HF_TOKENS = [t for t in HF_TOKENS if t]
-
-# GLOBAL COUNTER for multi-user robust token rotation
-# Increments globally across all requests to ensure even distribution
-token_cycle_counter = 0
 
 if not HF_TOKENS:
     print("⚠️  Warning: No HF tokens found in environment variables!")
@@ -90,7 +85,6 @@ def load_idm_vton_model():
     print("="*60)
     
     if not HF_TOKENS:
-        
         print(f" ⚠️  No HF tokens detected. Public spaces will be heavily rate-limited.")
     else:
         print(f" 🔑 {len(HF_TOKENS)} HF token(s) detected. Ready for authenticated rotation.")
@@ -117,25 +111,6 @@ def create_client(space_id, token_index=0):
         print(f"      ⚠️  Connection failed: {str(e)[:100]}")
         return None
 
-def _wake_up_space(space_id, token=None):
-    """Ping HF space status API to wake it from sleep before calling it."""
-    try:
-        space_slug = space_id.replace("/", "-").lower()
-        url = f"https://huggingface.co/api/spaces/{space_id}/status"
-        headers = {"Authorization": f"Bearer {token}"} if token else {}
-        resp = requests.get(url, headers=headers, timeout=10)
-        status = resp.json().get("stage", "unknown")
-        print(f"   🔔 Space {space_id} status: {status}")
-        if status in ("SLEEPING", "STOPPED", "BUILDING"):
-            print(f"   ⏳ Space is sleeping — sending wake-up request...")
-            # Hit the space root to trigger wake-up
-            wake_url = f"https://{space_id.replace('/', '-')}.hf.space/"
-            requests.get(wake_url, headers=headers, timeout=5)
-            print(f"   💤 Wake-up sent. Waiting 30s for space to start (Production Buffer)...")
-            time.sleep(30)
-    except Exception as e:
-        print(f"   ⚠️  Wake-up ping failed (non-critical): {e}")
-
 # ============================================================================
 # THE "SPACE-HOPPER" GENERATOR
 # ============================================================================
@@ -147,7 +122,6 @@ def _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, 
     2. Uses .submit() for better control.
     3. Handles timeouts and quota tracking.
     """
-    global token_cycle_counter
     temp_dir = os.path.join(output_folder, f'tmp_{int(time.time())}')
     os.makedirs(temp_dir, exist_ok=True)
     
@@ -184,20 +158,10 @@ def _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, 
 
             print(f"   📡 [PRODUCTION TIER] Attempting: {space_id}...")
             
-            # Wake up space before attempting
-            token = HF_TOKENS[0] if HF_TOKENS else None
-            _wake_up_space(space_id, token)
-            
             # ✅ PRODUCTION STEP: Smart Retry Logic with Token Rotation
             max_retries = len(HF_TOKENS) if HF_TOKENS else 1
             
-            # Start from the global counter to ensure rotation across requests
-            start_index = token_cycle_counter
-            
-            for i in range(max_retries):
-                # Calculate current index using rotation logic
-                attempt = (start_index + i) % max_retries
-                
+            for attempt in range(max_retries):
                 # Check if this specific token is in cooldown for this space
                 if QUOTA_MANAGER_AVAILABLE:
                     if not get_quota_manager().can_use_space(space_id, token_index=attempt):
@@ -205,7 +169,6 @@ def _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, 
                         continue
                         
                 used_token_index = attempt
-                token_cycle_counter += 1 # Increment for NEXT user/attempt
                 try:
                     client = create_client(space_id, token_index=attempt)
                     if not client: 
@@ -234,7 +197,7 @@ def _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, 
                                 guidance_scale=2.5,
                                 seed=42,
                                 show_type="result only",
-                                api_name="/predict" # ✅ Updated for Gradio V5 compatibility
+                                api_name="/submit_function"
                             )
                         else:
                             api_name = "/submit" if "flux" in space_id.lower() else "/submit_tryon"
@@ -384,11 +347,11 @@ def _map_product_category_to_placement(product_category, item_name=None):
         return 'lower_body'
         
     # Definitive Full Body
-    definitive_full = ['dress', 'gown', 'overall', 'jumpsuit', 'romper']
+    definitive_full = ['dress', 'gown', 'overall', 'jumpsuit', 'romper', 'saree', 'maxi']
     if any(k in search_text for k in definitive_full):
         return 'full_body'
         
-    # Priority 2: Definitive Upper Body
+    # Definitive Upper Body
     definitive_upper = ['shirt', 'tshirt', 'top', 'polo', 'blouse', 'jacket', 'coat', 'hoodie', 'sweater', 'blazer', 'vest', 'cardigan']
     if any(k in search_text for k in definitive_upper):
         if detected_category != 'upper_body':
@@ -448,8 +411,7 @@ def _apply_surgical_preservation(original_img, ai_result_img, pose_data, categor
             except Exception as e:
                 print(f"   ⚠️  Landmark error: {e}")
 
-        # Increased blend margin for smoother production results (≈ 46px on 1024px)
-        BM = max(int(h * 0.045), 20) 
+        BM = max(int(h * 0.035), 15)   # blend margin ≈ 36px on 1024px — tighter transition
 
         def restore_zone(result, orig, row, direction):
             """
@@ -670,32 +632,17 @@ def generate_tryon(model, person_image, clothing_items, pose_data, output_folder
         # TIER 2: SPACE-HOPPING FALLBACK (HuggingFace "Secondary")
         # ============================================================
         if not result:
-            print(f"\n🔄 [TIER 2] Initiating Robust Space-Hopping Fallback...")
-            # Shuffle spaces to distribute load across remaining servers
-            import random
-            fallback_list = list(HF_SPACES_PRIORITY)
-            if primary_space in fallback_list:
-                fallback_list.remove(primary_space) # Don't try the failed primary again here
-            random.shuffle(fallback_list)
-            
-            print(f"   🔍 Will try {len(fallback_list)} alternative spaces in randomized order")
+            print(f"\n🔄 [TIER 2] Initiating Space-Hopping Fallback...")
+            print(f"   🔍 Will try {len(HF_SPACES_PRIORITY)-1} alternative spaces")
             try:
                 details = first_item.get('title') or first_item.get('name') if isinstance(first_item, dict) else None
-                # Cycle through the shuffled list
-                for space_id in fallback_list:
-                    try:
-                        result = _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, specific_space=space_id, category=category, clothing_details=details)
-                        if result:
-                            tier_used = f"TIER 2 ({space_id})"
-                            print(f"\n✅ [TIER 2] ✨ Fallback successful with {space_id}!")
-                            break
-                    except Exception:
-                        continue # try next space in shuffled list
-                
+                result = _generate_with_hf_orchestrator(person_image, clothing_image, output_folder, category=category, clothing_details=details)
                 if result:
+                    tier_used = "TIER 2 (Fallback HuggingFace AI)"
+                    print(f"\n✅ [TIER 2] ✨ Fallback successful!")
                     print(f"   🎨 Quality: Photorealistic AI-powered try-on")
                 else:
-                    print(f"\n⚠️ [TIER 2] All fallback spaces failed")
+                    print(f"\n⚠️ [TIER 2] All HuggingFace spaces failed or returned no result")
             except Exception as e:
                 error_msg = str(e)
                 print(f"\n❌ [TIER 2] All AI Spaces failed: {error_msg}")
@@ -907,14 +854,8 @@ def _simple_overlay_fallback(person_image, clothing_image, category='upper_body'
         return person_image
 
 def _path_to_url(full_path, filename):
-    """Convert saved image to base64 for cloud deployment"""
-    try:
-        with open(full_path, 'rb') as f:
-            b64 = base64.b64encode(f.read()).decode('utf-8')
-        return f"data:image/jpeg;base64,{b64}"
-    except Exception as e:
-        print(f"   ⚠️  Base64 conversion failed: {e}")
-        return f"/uploads/tryon-results/{filename}"
+    """Local helper to generate URL for logging"""
+    return f"/uploads/tryon-results/{filename}"
 
 def _professional_post_process(image, category=None, pose_data=None):
     """
@@ -977,14 +918,10 @@ def _professional_post_process(image, category=None, pose_data=None):
 
 def _apply_perspective_warp(clothing_img, body_width, category='upper_body'):
     try:
-        # ✅ FIX: Skip warp entirely for lower_body — it distorts pants into robes
-        if category == 'lower_body':
-            return clothing_img
-            
         clothing_np = np.array(clothing_img)
         h, w = clothing_np.shape[:2]
-        cf = 0.12 if category == "upper_body" else 0.10
-        st = 0.08 if category == "upper_body" else 0.06
+        cf = 0.12 if category == "upper_body" else 0.06 if category == "lower_body" else 0.10
+        st = 0.08 if category == "upper_body" else 0.04 if category == "lower_body" else 0.06
         src = np.float32([[0,0],[w-1,0],[w-1,h-1],[0,h-1]])
         dst = np.float32([[w*cf,0],[w*(1-cf),0],[w*(1+st),h-1],[-w*st,h-1]])
         M = cv2.getPerspectiveTransform(src, dst)
@@ -997,10 +934,6 @@ def _apply_perspective_warp(clothing_img, body_width, category='upper_body'):
 
 def _simulate_fabric_draping(clothing_img, category='upper_body', drape_intensity=0.15):
     try:
-        # ✅ FIX: Minimal draping for pants — too much makes them look like curtains
-        if category == 'lower_body':
-            drape_intensity = 0.03
-            
         clothing_np = np.array(clothing_img)
         h, w = clothing_np.shape[:2]
         X, Y = np.meshgrid(np.arange(w), np.arange(h))
@@ -1110,13 +1043,12 @@ def _create_production_alpha_mask(clothing_img, w, h, category='upper_body'):
 
 def _calculate_professional_position(metrics, tw, th, category):
     if category == "lower_body":
-        # ✅ FIX: Center on hip_x, anchor top AT hip_y (waistband = hip level)
-        cx = metrics.get('hip_x', metrics['center_x']) - (tw // 2)
-        hy = metrics['hip_y']
-        sy = metrics['shoulder_y']
-        # Waistband sits at hip_y, with just 2% upward offset for waistband overlap
-        waist = hy - int((hy - sy) * 0.02)
-        cy = waist
+        # Center on hip_x, anchor top at waist (just above hip landmark)
+        cx     = metrics.get('hip_x', metrics['center_x']) - (tw // 2)
+        hy     = metrics['hip_y']
+        sy     = metrics['shoulder_y']
+        waist  = hy - int((hy - sy) * 0.08)
+        cy     = waist
     elif category == "full_body":
         cx = metrics['center_x'] - (tw // 2)
         cy = metrics['shoulder_y'] - int(th * 0.05)
@@ -1130,16 +1062,14 @@ def _intelligent_clothing_resize(clothing_img, metrics, category):
     sw = metrics['shoulder_width']
 
     if category == "lower_body":
-        # ✅ FIX: pants width = hip width (not shoulder), height = hip to ankle only
-        hip_width = max(int(sw * 1.05), int(metrics.get('hip_x', sw) * 0.5))
-        tw = hip_width
+        tw = max(int(sw * 1.15), int(metrics.get('hip_x', sw) * 0.45))
         ratio = clothing_img.width / clothing_img.height
-        # ✅ FIX: Height is ONLY hip→ankle distance, no extra inflation
-        needed_h = int((metrics['ankle_y'] - metrics['hip_y']) * 1.05)
+        # Height = hip_y → ankle_y + 5% extra
+        needed_h = int((metrics['ankle_y'] - metrics['hip_y']) * 1.10) + int(metrics.get('hip_y',0) * 0.05)
         th = max(int(tw / ratio), needed_h)
         tw = int(th * ratio)
-        if tw < int(sw * 0.9):
-            tw = int(sw * 0.9)
+        if tw < int(sw * 1.1):
+            tw = int(sw * 1.1)
             th = int(tw / ratio)
     elif category == "full_body":
         tw = int(sw * 1.2)

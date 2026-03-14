@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Favicon - You can replace vite.svg with your own icon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Viewport for responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="TRYMI - AI-powered virtual outfit predictor. Discover perfect color combinations and styling suggestions for any occasion." />
+  <meta name="keywords"
+    content="outfit predictor, virtual try-on, fashion AI, color combinations, style suggestions, TRYMI" />
+  <meta name="author" content="TRYMI Team" />
+
+  <!-- Open Graph Meta Tags (for social media sharing) -->
+  <meta property="og:title" content="TRYMI - AI Outfit Predictor" />
+  <meta property="og:description" content="Discover perfect outfit combinations with AI-powered fashion insights" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://trymi-app.com" />
+  <meta property="og:image" content="/og-image.png" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TRYMI" />
+  <meta name="twitter:description" content="Discover perfect outfit combinations with AI-powered fashion insights" />
+  <meta name="twitter:image" content="/twitter-image.png" />
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#1a1a1a" />
+  <meta name="msapplication-TileColor" content="#1a1a1a" />
+
+  <!-- Preconnect to external domains for better performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Optional: Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+
+  <!-- Title -->
+  <title>TRYMI </title>
+
+  <!-- Inline critical CSS for faster loading -->
+  <style>
+    /* Critical CSS for initial loading */
+    body {
+      margin: 0;
+      font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Roboto",
+        "Oxygen",
+        "Ubuntu",
+        "Cantarell",
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+    }
+
+    #root {
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Loading spinner while React loads */
+    .initial-loading {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+      font-family: "Inter", sans-serif;
+    }
+
+    .initial-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(15, 14, 14, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Loading fallback while React app loads -->
+  <div id="root">
+    <div class="initial-loading">
+      <div class="initial-spinner"></div>
+      <h2 style="margin-top: 20px; font-weight: 300">Loading TRYMI...</h2>
+    </div>
+  </div>
+
+  <!-- Vite React entry point -->
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- Fallback for browsers that don't support ES modules -->
+  <script nomodule>
+    alert(
+      "Your browser does not support modern JavaScript features. Please update your browser to use TRYMI.",
+    );
+  </script>
+</body>
+
+</html>

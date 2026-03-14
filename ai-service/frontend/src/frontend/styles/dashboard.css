@@ -1,0 +1,340 @@
+/* OutfitPredictor.css */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* Navigation styles */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(24, 24, 24);
+  padding: 15px 20px;
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+}
+
+.heading h4 {
+  color: white;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #ffcc00;
+}
+
+/* Video background styles */
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Main content styles */
+.content {
+  position: relative;
+  z-index: 1;
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  animation: fadeIn 2s ease-in;
+}
+
+.content h1 {
+  margin-bottom: 10px;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.content small p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+/* Search styles */
+.search {
+  --padding: 8px;
+  width: 400px;
+  max-width: 90%;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+
+#outfitForm {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  padding: var(--padding);
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  animation: slideIn 1s ease-out 0.5s both;
+}
+
+#outfitForm:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.search-input {
+  flex: 1;
+  font-size: 16px;
+  border: 1px solid #28a745;
+  outline: none;
+  padding: 12px 20px;
+  background: transparent;
+  color: white;
+  width: 280px;
+  border-radius: 25px;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.search-input:focus {
+  border-color: #90ee90;
+  box-shadow: 0 0 10px rgba(144, 238, 144, 0.3);
+}
+
+.search-button {
+  padding: 10px 25px;
+  font-size: 15px;
+  border: 1px solid #28a745;
+  border-radius: 25px;
+  background: #90ee90;
+  cursor: pointer;
+  color: #28a745;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+.search-button:hover {
+  background: #28a745;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.search-button:active {
+  transform: translateY(0);
+}
+
+/* Outfit suggestion styles */
+#outfitSuggestion {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 15px;
+  border-radius: 8px;
+  animation: fadeIn 0.5s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.welcome {
+  font-size: 18px;
+  color: white;
+  text-align: center;
+  animation: fadeInOut 2s infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Bootstrap button overrides */
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, 
+              border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-outline-success {
+  color: #28a745;
+  background-color: transparent;
+  background-image: none;
+  border-color: #28a745;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .content {
+    padding: 20px;
+  }
+  
+  .content h1 {
+    font-size: 2rem;
+  }
+  
+  .search {
+    width: 100%;
+    padding: 0 20px;
+  }
+  
+  #outfitForm {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+  
+  .search-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .search-button {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  nav {
+    padding: 10px 15px;
+  }
+  
+  .nav-links li {
+    margin: 0 8px;
+  }
+  
+  .nav-links a {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .content small p {
+    font-size: 0.9rem;
+  }
+  
+  #outfitSuggestion {
+    font-size: 16px;
+    padding: 12px;
+  }
+  
+  .search-input {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+  
+  .search-button {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Additional enhancements */
+.search-input:focus {
+  animation: pulse 0.3s ease-in-out;
+}
+
+.search-button:focus {
+  outline: 2px solid rgba(40, 167, 69, 0.5);
+  outline-offset: 2px;
+}
