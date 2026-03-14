@@ -67,42 +67,7 @@ const Collections = () => {
   // Get current user
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Mobile menu state
-  const [menuOpen, setMenuOpen] = useState(false);
-  const abortControllerRef = useRef(null);
-  const isFirstMountRef = useRef(true); // Track if it's the first mount
 
-  const [loadingCaptionIndex, setLoadingCaptionIndex] = useState(0);
-  const loadingCaptions = useMemo(
-    () => [
-      "Measuring Elegance...",
-      "Tailoring Your Collection...",
-      "Stitching Silk & Style...",
-      "Finishing the Seam...",
-    ],
-    [],
-  );
-
-  useEffect(() => {
-    if (loading) {
-      const interval = setInterval(() => {
-        setLoadingCaptionIndex((prev) => (prev + 1) % loadingCaptions.length);
-      }, 2000);
-      return () => clearInterval(interval);
-    }
-  }, [loading, loadingCaptions.length]);
-
-  const API_URL = import.meta.env.VITE_API_URL || "https://trymi-backend.onrender.com";
-
-  // Toggle mobile menu
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  // Close menu when nav link is clicked
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
 
   const showToast = useCallback((message, type = "success") => {
     setToast({ show: true, message, type });
@@ -595,18 +560,17 @@ const Collections = () => {
             <Link to="/outfit-predictor">
               <h1 className="logo">TRYMI</h1>
             </Link>
-            <ul className={`nav-menu ${menuOpen ? "active" : ""}`}>
+            <ul className="nav-menu">
               <li>
                 <Link
                   to="/outfit-predictor"
                   className="nav-link"
-                  onClick={closeMenu}
                 >
                   Home
                 </Link>
               </li>
               <li>
-                <span className="nav-link-active" onClick={closeMenu}>
+                <span className="nav-link-active">
                   Collections
                 </span>
               </li>
@@ -615,7 +579,6 @@ const Collections = () => {
                   className="nav-link"
                   onClick={() => {
                     handleVirtualTryClick();
-                    closeMenu();
                   }}
                 >
                   Virtual Try-On
@@ -626,7 +589,6 @@ const Collections = () => {
                   className="nav-link"
                   onClick={() => {
                     handleStudioClick();
-                    closeMenu();
                   }}
                   style={{ cursor: "pointer" }}
                 >
@@ -647,21 +609,13 @@ const Collections = () => {
                 </span>
               </li>
               <li>
-                <Link to="/about" className="nav-link" onClick={closeMenu}>
+                <Link to="/about" className="nav-link">
                   About
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Hamburger Menu Button */}
-          <button
-            className="nav-toggle-btn"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-          >
-            ☰
-          </button>
           <div className="nav-icons">
             <button className="icon-btn">
               <FaSearch />

@@ -1090,7 +1090,9 @@ def _create_production_alpha_mask(clothing_img, w, h, category='upper_body'):
         else:
             alpha = np.full((h, w), 255, dtype=np.float32)
             
-        fw, fh = int(w * 0.1), int(h * 0.1)
+        # ✅ FIX: Narrow garments (pants) need much less horizontal fading to avoid looking like stripes
+        fw_ratio = 0.05 if category == 'lower_body' else 0.1
+        fw, fh = int(w * fw_ratio), int(h * 0.1)
         
         dy = np.minimum(np.arange(h), h - np.arange(h) - 1)
         dx = np.minimum(np.arange(w), w - np.arange(w) - 1)
@@ -1107,13 +1109,13 @@ def _create_production_alpha_mask(clothing_img, w, h, category='upper_body'):
 
 def _calculate_professional_position(metrics, tw, th, category):
     if category == "lower_body":
-        # ✅ FIX: Center on hip_x, anchor top AT hip_y (waistband = hip level)
+        # ✅ FIX: Center on hip_x, anchor top AT hip_y
         cx = metrics.get('hip_x', metrics['center_x']) - (tw // 2)
         hy = metrics['hip_y']
         sy = metrics['shoulder_y']
-        # Waistband sits at hip_y, with just 2% upward offset for waistband overlap
-        waist = hy - int((hy - sy) * 0.02)
-        cy = waist
+        # ✅ FIX: Waistband usually sits higher (≈ 8% above hip joint for high-waisted look)
+        waist_offset = (hy - sy) * 0.08
+        cy = int(hy - waist_offset)
     elif category == "full_body":
         cx = metrics['center_x'] - (tw // 2)
         cy = metrics['shoulder_y'] - int(th * 0.05)
@@ -1127,16 +1129,16 @@ def _intelligent_clothing_resize(clothing_img, metrics, category):
     sw = metrics['shoulder_width']
 
     if category == "lower_body":
-        # ✅ FIX: pants width = hip width (not shoulder), height = hip to ankle only
-        hip_width = max(int(sw * 1.05), int(metrics.get('hip_x', sw) * 0.5))
+        # ✅ FIX: Added 20% width buffer to pants to avoid 'vertical stripe' look
+        hip_width = max(int(sw * 1.25), int(metrics.get('hip_x', sw) * 0.6))
         tw = hip_width
         ratio = clothing_img.width / clothing_img.height
-        # ✅ FIX: Height is ONLY hip→ankle distance, no extra inflation
-        needed_h = int((metrics['ankle_y'] - metrics['hip_y']) * 1.05)
+        # ✅ FIX: Height is hip→ankle distance
+        needed_h = int((metrics['ankle_y'] - metrics['hip_y']) * 1.15)
         th = max(int(tw / ratio), needed_h)
         tw = int(th * ratio)
-        if tw < int(sw * 0.9):
-            tw = int(sw * 0.9)
+        if tw < int(sw * 1.0):
+            tw = int(sw * 1.0)
             th = int(tw / ratio)
     elif category == "full_body":
         tw = int(sw * 1.2)
