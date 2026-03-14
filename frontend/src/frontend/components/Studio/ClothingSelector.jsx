@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDisclosure } from "@chakra-ui/react";
@@ -33,7 +33,7 @@ const ClothingSelector = () => {
 
   // ✅ New state for upload category
   const [uploadCategory, setUploadCategory] = useState("upper_body");
-
+  const generateBtnRef = useRef(null);
   const navigate = useNavigate();
 
   // ✅ Helper to classify Items
@@ -179,6 +179,16 @@ const ClothingSelector = () => {
 
     setSelectedProduct(product);
     setUploadedClothing(null);
+
+    // ✅ Automatic Scroll to Generate Button
+    setTimeout(() => {
+      if (generateBtnRef.current) {
+        generateBtnRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, 100);
   };
 
   const handleClothingUpload = (e) => {
@@ -205,6 +215,16 @@ const ClothingSelector = () => {
           preview: reader.result,
         });
         setSelectedProduct(null);
+
+        // ✅ Automatic Scroll to Generate Button after upload
+        setTimeout(() => {
+          if (generateBtnRef.current) {
+            generateBtnRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }, 300); // Slightly more delay for image preview to render
       };
       reader.readAsDataURL(file);
     }
@@ -847,6 +867,7 @@ const ClothingSelector = () => {
       )}
 
       <button
+        ref={generateBtnRef}
         className="btn-primary-studio generate-btn"
         onClick={generateTryOn}
         disabled={(!selectedProduct && !uploadedClothing) || isGenerating}

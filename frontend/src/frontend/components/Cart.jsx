@@ -250,7 +250,7 @@ const Cart = () => {
                         </button>
                       </div>
                       <div className="cart-item-final-price">
-                        $
+                        ₹
                         {(
                           (parseFloat(item.price) || 0) * (item.quantity || 1)
                         ).toFixed(2)}
@@ -266,7 +266,7 @@ const Cart = () => {
 
               <div className="summary-data-row">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₹{subtotal.toFixed(2)}</span>
               </div>
 
               <div className="summary-data-row">
@@ -275,26 +275,26 @@ const Cart = () => {
                   {shipping === 0 ? (
                     <span className="summary-free-badge">FREE</span>
                   ) : (
-                    `$${shipping.toFixed(2)}`
+                    `₹${shipping.toFixed(2)}`
                   )}
                 </span>
               </div>
 
               <div className="summary-data-row">
                 <span>Tax (10%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>₹{tax.toFixed(2)}</span>
               </div>
 
               <div className="summary-hr"></div>
 
               <div className="summary-data-row summary-total-row">
                 <span className="total-label">Total</span>
-                <span className="total-value">${total.toFixed(2)}</span>
+                <span className="total-value">₹{total.toFixed(2)}</span>
               </div>
 
               {subtotal > 0 && subtotal < 50 && (
                 <p className="summary-shipping-promo">
-                  💡 Add ${(50 - subtotal).toFixed(2)} more for FREE shipping!
+                  💡 Add ₹{(50 - subtotal).toFixed(2)} more for FREE shipping!
                 </p>
               )}
 

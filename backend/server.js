@@ -277,11 +277,16 @@ const initializeEmailService = async () => {
   if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
     try {
       emailTransporter = nodemailer.createTransport({
-        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true, // Use SSL
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASSWORD,
         },
+        tls: {
+          rejectUnauthorized: false
+        }
       });
 
       console.log("📧 Verifying email connection...");
@@ -291,7 +296,10 @@ const initializeEmailService = async () => {
       console.log(`✅ Emails will be sent from: ${process.env.EMAIL_USER}`);
       return true;
     } catch (error) {
-      console.error("❌ Email verification failed:", error.message);
+      console.error("❌ Email verification failed:");
+      console.error("  - Message:", error.message);
+      console.error("  - Code:", error.code);
+      console.error("  - Command:", error.command);
       console.error("💡 Check your EMAIL_USER and EMAIL_PASSWORD in .env");
       console.error("💡 Make sure 2-Step Verification is enabled on Gmail");
       console.error(
@@ -709,6 +717,10 @@ app.post("/api/test-email", async (req, res) => {
         emailTransporter: !!emailTransporter,
         from: process.env.EMAIL_USER,
         to: "sunnyvelaga219@gmail.com",
+        errorMessage: error.message,
+        errorCode: error.code,
+        smtpResponse: error.response,
+        smtpResponseCode: error.responseCode,
       },
     });
   }
@@ -721,6 +733,12 @@ app.post("/api/test-email", async (req, res) => {
 app.post("/api/auth/signup", checkDbConnection, async (req, res) => {
   try {
     const { name, email, password, confirmPassword, gender } = req.body;
+    
+    console.log("📝 Incoming Signup Request:");
+    console.log("  - Name:", name);
+    console.log("  - Email:", email);
+    console.log("  - Password length:", password?.length);
+    console.log("  - ConfirmPassword length:", confirmPassword?.length);
 
     if (!name || !email || !password || !confirmPassword) {
       return res.status(400).json({
@@ -784,6 +802,10 @@ app.post("/api/auth/signup", checkDbConnection, async (req, res) => {
 app.post("/api/auth/login", checkDbConnection, async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    console.log("🔑 Incoming Login Request:");
+    console.log("  - Email:", email);
+    console.log("  - Password length:", password?.length);
 
     if (!email || !password) {
       return res.status(400).json({
@@ -792,9 +814,21 @@ app.post("/api/auth/login", checkDbConnection, async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
 
-    if (!user || user.password !== password) {
+    if (!user) {
+      console.warn("❌ Login failure: User not found -", email);
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    console.log("  - Found user in DB:", user.email);
+    console.log("  - Attempting password match...");
+
+    if (user.password !== password) {
+      console.warn("❌ Login failure: Password mismatch for -", email);
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",

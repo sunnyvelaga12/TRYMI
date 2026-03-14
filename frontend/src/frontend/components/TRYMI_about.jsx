@@ -5,7 +5,11 @@ import { FaUser, FaMapMarkerAlt, FaEnvelope, FaPhone, FaFire } from 'react-icons
 const About = () => {
   const [hoveredSection, setHoveredSection] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
 
   const styles = {
     page: {
@@ -366,11 +370,38 @@ const About = () => {
             0% { transform: translateY(0) scale(1); }
             100% { transform: translateY(-3px) scale(1.1); }
           }
+          @media (max-width: 768px) {
+            .nav-menu { display: none !important; }
+            .nav-menu.active {
+              display: flex !important; flex-direction: column !important; position: absolute !important;
+              top: 100% !important; left: 0 !important; width: 100% !important; background: white !important;
+              padding: 20px !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+              z-index: 100 !important; align-items: flex-start !important; gap: 15px !important;
+            }
+            .nav-menu.active li { width: 100% !important; border-bottom: 1px solid #f0f0f0 !important; padding: 10px 0 !important; }
+            .nav-toggle-btn { display: block !important; background: transparent !important; border: none !important;
+              font-size: 24px !important; cursor: pointer !important; color: #1a1a1a !important; margin-left: auto; }
+            .navbar-container { flex-direction: row !important; width: 100% !important; }
+            .hero-section { padding: 60px 20px !important; }
+            .hero-title { font-size: 42px !important; }
+            .hero-subtitle { font-size: 13px !important; }
+            .story-section { grid-template-columns: 1fr !important; gap: 40px !important; margin-bottom: 60px !important; text-align: center; direction: ltr !important; }
+            .story-image { height: 300px !important; }
+            .values-grid { grid-template-columns: 1fr !important; }
+            .value-card { padding: 40px 20px !important; }
+            .team-grid { grid-template-columns: 1fr !important; margin-top: 40px !important; }
+            .team-image { width: 150px !important; height: 150px !important; }
+            .footer-grid { grid-template-columns: 1fr !important; gap: 40px !important; text-align: center; }
+            .contact-section { align-items: center !important; }
+            .contact-section a { justify-content: center !important; }
+            .social-links { gap: 20px !important; }
+            .top-banner { display: none !important; }
+          }
         `}
       </style>
 
       {/* Top Banner */}
-      <div style={styles.topBanner}>
+      <div style={styles.topBanner} className="top-banner">
         <div style={styles.bannerLeft}>
           <a
             href="#"
@@ -404,21 +435,31 @@ const About = () => {
       </div>
 
       {/* Navbar */}
-      <nav style={styles.navbar}>
-        <div style={styles.navContainer}>
+      <nav style={styles.navbar} className="navbar">
+        <div style={styles.navContainer} className="navbar-container">
           <h1
             style={styles.logo}
+            className="logo"
             onMouseEnter={(e) => e.target.style.letterSpacing = '12px'}
             onMouseLeave={(e) => e.target.style.letterSpacing = '8px'}
           >
             TRYMI
           </h1>
 
-          <ul style={styles.navMenu}>
+          <button 
+            className="nav-toggle-btn"
+            onClick={toggleMenu}
+            style={{ display: 'none' }}
+          >
+            ☰
+          </button>
+
+          <ul style={styles.navMenu} className={`nav-menu ${menuOpen ? "active" : ""}`}>
             <li>
               <Link
                 to="/outfit-predictor"
                 style={styles.navLink}
+                onClick={closeMenu}
                 onMouseEnter={(e) => e.target.style.color = '#000000'}
                 onMouseLeave={(e) => e.target.style.color = '#4A4A4A'}
               >
@@ -426,13 +467,14 @@ const About = () => {
               </Link>
             </li>
             <li>
-              <Link to="/about" style={styles.navLinkActive}>About</Link>
+              <Link to="/about" style={styles.navLinkActive} onClick={closeMenu}>About</Link>
             </li>
             {['Collections', 'Virtual Try', 'Studio'].map((item, index) => (
               <li key={index} style={{ position: 'relative' }}>
                 <Link
                   to={`/${item.toLowerCase().replace(' ', '-')}`}
                   style={styles.navLink}
+                  onClick={closeMenu}
                   onMouseEnter={(e) => e.target.style.color = '#000000'}
                   onMouseLeave={(e) => e.target.style.color = '#4A4A4A'}
                 >
@@ -459,19 +501,20 @@ const About = () => {
       </nav>
 
       {/* Hero Section */}
-      <section style={styles.heroSection}>
-        <h1 style={styles.heroTitle}>Our Story</h1>
-        <p style={styles.heroSubtitle}>Where Technology Meets Timeless Style</p>
+      <section style={styles.heroSection} className="hero-section">
+        <h1 style={styles.heroTitle} className="hero-title">Our Story</h1>
+        <p style={styles.heroSubtitle} className="hero-subtitle">Where Technology Meets Timeless Style</p>
       </section>
 
       {/* Main Content */}
       <main style={styles.mainContent}>
         {/* Story Section */}
-        <div style={styles.storySection}>
+        <div style={styles.storySection} className="story-section">
           <img
             src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=700&h=600&fit=crop"
             alt="TRYMI Fashion"
             style={styles.storyImage}
+            className="story-image"
           />
           <div style={styles.storyContent}>
             <span style={styles.sectionLabel}>Our Beginning</span>
@@ -486,11 +529,12 @@ const About = () => {
         </div>
 
         {/* Reversed Story Section */}
-        <div style={{ ...styles.storySection, gridTemplateColumns: '1fr 1fr', direction: 'rtl' }}>
+        <div style={{ ...styles.storySection, gridTemplateColumns: '1fr 1fr', direction: 'rtl' }} className="story-section">
           <img
             src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&h=600&fit=crop"
             alt="Craftsmanship"
             style={styles.storyImage}
+            className="story-image"
           />
           <div style={{ ...styles.storyContent, direction: 'ltr' }}>
             <span style={styles.sectionLabel}>Our Approach</span>
@@ -512,7 +556,7 @@ const About = () => {
           <h2 style={{ ...styles.sectionTitle, textAlign: 'center' }}>What Defines Us</h2>
         </div>
 
-        <div style={styles.valuesGrid}>
+        <div style={styles.valuesGrid} className="values-grid">
           {[
             {
               icon: '✦',
@@ -536,6 +580,7 @@ const About = () => {
                 ...styles.valueCard,
                 backgroundColor: hoveredSection === index ? '#FFFFFF' : '#FAFAFA'
               }}
+              className="value-card"
               onMouseEnter={() => setHoveredSection(index)}
               onMouseLeave={() => setHoveredSection(null)}
             >
@@ -561,12 +606,13 @@ const About = () => {
           <span style={styles.sectionLabel}>Our Visionaries</span>
           <h2 style={{ ...styles.sectionTitle, textAlign: 'center' }}>The Minds Behind TRYMI</h2>
 
-          <div style={styles.teamGrid}>
+          <div style={styles.teamGrid} className="team-grid">
             <div style={styles.teamCard}>
               <img
                 src="/sai-chandu.jpg"
                 alt="Sai Chandu Velaga"
                 style={styles.teamImage}
+                className="team-image"
                 onMouseEnter={(e) => {
                   Object.assign(e.currentTarget.style, styles.teamImageHover);
                 }}
@@ -590,10 +636,10 @@ const About = () => {
       </section>
 
       {/* Footer */}
-      <footer style={styles.footer}>
+      <footer style={styles.footer} className="footer">
         <div style={styles.footerContent}>
-          <div style={styles.footerGrid}>
-            <div style={styles.footerSection}>
+          <div style={styles.footerGrid} className="footer-grid">
+            <div style={styles.footerSection} className="contact-section">
               <h4 style={styles.footerTitle}>Contact</h4>
               <a
                 href="mailto:trymi@fashion.com"
@@ -635,7 +681,7 @@ const About = () => {
           </div>
 
           <div style={styles.footerBottom}>
-            <div style={styles.socialLinks}>
+            <div style={styles.socialLinks} className="social-links">
               {['Instagram', 'Twitter', 'LinkedIn'].map((platform, index) => (
                 <a
                   key={index}

@@ -512,7 +512,7 @@ const OutfitPredictor = () => {
                     {product.title || product.name}
                   </h3>
                   <p className="product-price">
-                    {product.price || product.priceRange}
+                    {product.price ? `₹${product.price.toString().replace('$', '').replace('₹', '')}` : (product.priceRange || "Price not available")}
                   </p>
                 </div>
               </div>

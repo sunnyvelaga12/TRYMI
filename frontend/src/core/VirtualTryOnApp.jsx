@@ -122,7 +122,7 @@ const ProductItem = React.memo(
             {product.price && (
               <Text fontSize="10px" color="green.300" fontWeight="semibold">
                 {typeof product.price === "number"
-                  ? `$${product.price}`
+                  ? `₹${product.price}`
                   : product.price}
               </Text>
             )}
@@ -1447,7 +1447,7 @@ const VirtualTryOnApp = () => {
                       {sel.price && (
                         <Text fontSize="xs" color="gray.400">
                           {typeof sel.price === "number"
-                            ? `$${sel.price}`
+                            ? `₹${sel.price}`
                             : sel.price}
                         </Text>
                       )}

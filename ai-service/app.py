@@ -286,6 +286,9 @@ def generate_tryon_endpoint():
         # Step 1: Load person image
         print("📋 Step 1: Loading person image...")
         person_img = load_image_from_any(person_source)
+        # Limit image size to prevent OOM
+        MAX_SIZE = (512, 512)
+        person_img.thumbnail(MAX_SIZE, Image.LANCZOS)
         print(f"   ✅ Person: {person_img.mode} {person_img.size}")
 
         # Step 2: Detect pose
@@ -305,6 +308,7 @@ def generate_tryon_endpoint():
                 continue
 
             clothing_img = load_image_from_any(source)
+            clothing_img.thumbnail(MAX_SIZE, Image.LANCZOS)
             processed_items.append({
                 'image': clothing_img,
                 'category': item.get('category', 'upper_body'),

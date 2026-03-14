@@ -659,7 +659,6 @@ const Collections = () => {
             className="nav-toggle-btn"
             onClick={toggleMenu}
             aria-label="Toggle menu"
-            style={{ display: "none" }}
           >
             ☰
           </button>
@@ -805,7 +804,9 @@ const Collections = () => {
                       ></span>
                     ))}
                 </div>
-                <p className="item-price">{item.priceRange || item.price}</p>
+                <p className="item-price">
+                  {item.price ? `₹${item.price.toString().replace('$', '').replace('₹', '')}` : (item.priceRange || "Price not available")}
+                </p>
               </div>
             </div>
           ))

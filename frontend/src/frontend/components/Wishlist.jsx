@@ -221,7 +221,7 @@ const Wishlist = () => {
                         : item.description}
                     </p>
                     <p className="wishlist-item-price">
-                      {item.priceRange || (item.price ? `$${item.price}` : "Price not available")}
+                      {item.priceRange || (item.price ? `₹${item.price}` : "Price not available")}
                     </p>
                     <div className="wishlist-card-actions">
                       <button

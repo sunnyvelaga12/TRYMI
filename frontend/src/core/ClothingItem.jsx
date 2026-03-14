@@ -61,7 +61,7 @@ const ClothingItem = ({ item, category, onError = null }) => {
         console.warn("⚠️ Invalid price value:", item.price);
         return null;
       }
-      return `$${price.toFixed(2)}`;
+      return `₹${price.toFixed(2)}`;
     } catch (error) {
       console.error("❌ Error formatting price:", error);
       return null;

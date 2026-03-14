@@ -347,7 +347,7 @@ const AdminDashboard = () => {
         category: formData.category.toLowerCase(), // Ensure lowercase
         gender: formData.gender,
         price: Number(formData.price), // Convert to number
-        priceRange: formData.priceRange || `$${formData.price}`, // Optional display string
+        priceRange: formData.priceRange || `₹${formData.price}`, // Optional display string
         colors: formData.colors,
         sizes: formData.sizes,
         image: formData.image,
@@ -941,10 +941,10 @@ const AdminDashboard = () => {
                 value={formData.priceRange}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="e.g., $99 or $99-$199"
+                placeholder="e.g., ₹99 or ₹99-₹199"
               />
               <p style={styles.helpText}>
-                Optional: For displaying price ranges like "$99-$199"
+                Optional: For displaying price ranges like "₹99-₹199"
               </p>
             </div>
 
@@ -1210,7 +1210,7 @@ const AdminDashboard = () => {
                         color: "#000",
                       }}
                     >
-                      {product.priceRange || `$${product.price}`}
+                      {product.priceRange || `₹${product.price}`}
                     </p>
                     {product.sizes && product.sizes.length > 0 && (
                       <p

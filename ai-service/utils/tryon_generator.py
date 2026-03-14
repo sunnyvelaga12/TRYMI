@@ -1012,10 +1012,7 @@ def _simulate_fabric_draping(clothing_img, category='upper_body', drape_intensit
             dy = np.sin(X/w*4*np.pi + Y/h*np.pi)*drape_intensity*h*0.01
         Yd = np.clip(Y+dy, 0, h-1).astype(int)
         Xd = np.clip(X+dx, 0, w-1).astype(int)
-        draped = np.zeros_like(clothing_np)
-        for i in range(h):
-            for j in range(w):
-                draped[i,j] = clothing_np[Yd[i,j], Xd[i,j]]
+        draped = clothing_np[Yd, Xd]
         return Image.fromarray(draped, clothing_img.mode)
     except:
         return clothing_img
@@ -1095,14 +1092,14 @@ def _create_production_alpha_mask(clothing_img, w, h, category='upper_body'):
             
         fw, fh = int(w * 0.1), int(h * 0.1)
         
-        for y in range(h):
-            for x in range(w):
-                if alpha[y, x] > 0:
-                    dy, dx = min(y, h-y-1), min(x, w-x-1)
-                    factor = 1.0
-                    if dy < fh: factor *= (dy/fh)**0.6
-                    if dx < fw: factor *= (dx/fw)**0.5
-                    alpha[y, x] *= factor
+        dy = np.minimum(np.arange(h), h - np.arange(h) - 1)
+        dx = np.minimum(np.arange(w), w - np.arange(w) - 1)
+        dy_factor = np.where(dy < fh, (dy/fh)**0.6, 1.0)
+        dx_factor = np.where(dx < fw, (dx/fw)**0.5, 1.0)
+        factor = np.outer(dy_factor, dx_factor)
+        
+        alpha = alpha * factor
+        alpha[alpha == 0] = 0
         
         mask = Image.fromarray(alpha.astype(np.uint8)).filter(ImageFilter.GaussianBlur(radius=2))
         return mask
