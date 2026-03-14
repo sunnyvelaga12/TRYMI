@@ -784,32 +784,35 @@
   }
 
   .nav-left {
+    display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
-    width: auto;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .logo {
     font-size: 20px;
     letter-spacing: 4px;
+    flex-shrink: 0;
   }
 
   .nav-menu {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
-    width: 100%;
-    padding: 12px 16px 8px;
+    flex: 1;
+    min-width: 0;
+    padding: 12px 0 8px;
     gap: 24px;
     scrollbar-width: none;
     justify-content: flex-start;
-    border-top: 1px solid #f5f5f5;
-    order: 3;
     -webkit-overflow-scrolling: touch;
     list-style: none;
     margin: 0;
-    background: #ffffff;
+    white-space: nowrap;
   }
 
   .nav-menu::-webkit-scrollbar {
