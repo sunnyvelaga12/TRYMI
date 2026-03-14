@@ -941,12 +941,12 @@ app.post("/api/auth/send-otp", checkDbConnection, async (req, res) => {
 
     otpStorage.set(email.toLowerCase(), {
       otp: otp,
-      expiresAt: Date.now() + 5 * 60 * 1000,
+      expiresAt: Date.now() + 15 * 60 * 1000,
       createdAt: Date.now(),
     });
 
     console.log(`🔐 OTP generated: ${otp}`);
-    console.log(`⏰ OTP expires in: 5 minutes`);
+    console.log(`⏰ OTP expires in: 15 minutes`);
 
     // Check email service status
     console.log("\n📧 Email service status:");
@@ -992,7 +992,7 @@ app.post("/api/auth/send-otp", checkDbConnection, async (req, res) => {
                 <div class="otp-box">${otp}</div>
                 
                 <div class="info">
-                  <p><strong>⏰ This OTP is valid for 5 minutes only.</strong></p>
+                  <p><strong>⏰ This OTP is valid for 15 minutes only.</strong></p>
                   <p>Enter this OTP on the password reset page to create a new password.</p>
                 </div>
                 
