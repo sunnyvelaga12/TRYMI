@@ -5,11 +5,30 @@ import "../styles/login.css";
 const TrymiLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [isShaking, setIsShaking] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const eyeIconStyle = {
+    position: "absolute",
+    right: "15px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    cursor: "pointer",
+    fontSize: "1.3rem",
+    color: "#1dbc08",
+    transition: "all 0.3s ease",
+    zIndex: 10,
+    background: "none",
+    border: "none",
+    padding: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 
   // Toggle mobile menu
   const toggleMenu = () => {
@@ -186,16 +205,35 @@ const TrymiLogin = () => {
               />
             </div>
 
-            <div className="login-form-group">
+            <div className="login-form-group" style={{ position: "relative" }}>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="login-form-control"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
                 autoComplete="current-password"
+                style={{ paddingRight: "50px" }}
               />
+              <button
+                type="button"
+                style={eyeIconStyle}
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.color = "#16a006";
+                  e.currentTarget.style.transform =
+                    "translateY(-50%) scale(1.15) rotate(10deg)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.color = "#1dbc08";
+                  e.currentTarget.style.transform =
+                    "translateY(-50%) scale(1) rotate(0deg)";
+                }}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </button>
             </div>
 
             <button type="submit" className="login-btn">
