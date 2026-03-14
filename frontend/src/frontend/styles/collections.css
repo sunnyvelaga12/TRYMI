@@ -778,9 +778,10 @@
   /* Ensure navbar content wraps correctly */
   .navbar-container {
     flex-direction: row;
+    flex-wrap: nowrap; /* PREVENT WRAPPING */
     justify-content: space-between;
     align-items: center;
-    gap: 0;
+    gap: 12px;
   }
 
   .nav-left {

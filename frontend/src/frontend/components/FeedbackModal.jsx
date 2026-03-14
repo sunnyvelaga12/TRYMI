@@ -44,14 +44,14 @@ const FeedbackModal = ({ isOpen, onClose }) => {
       const user = JSON.parse(userData);
       const feedbackData = {
         userId: user._id || user.id,
-        userEmail: user.email,
+        email: user.email,
         userName: user.name || "Anonymous",
         rating,
         category,
         message,
       };
 
-      await axios.post(`${API_URL}/api/feedback/submit`, feedbackData);
+      await axios.post(`${API_URL}/api/feedback`, feedbackData);
       setSubmitted(true);
       setTimeout(() => {
         onClose();

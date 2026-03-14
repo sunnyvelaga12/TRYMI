@@ -25,7 +25,7 @@ const AtelierLoader = () => {
             <div className="silk-ripple"></div>
             <div className="atelier-content">
                 <div className="stitching-logo">
-                    <h1 className="logo loading-logo">TRYMI</h1>
+                    <h1 className="atelier-logo loading-logo">TRYMI</h1>
                     <div className="needle-thread"></div>
                 </div>
                 <div className="loading-text-reveal">
