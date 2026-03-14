@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from "../config/api";
 import "../styles/signup.css";
 
 const SignUp = () => {
@@ -110,7 +111,7 @@ const SignUp = () => {
 
     try {
       // Send signup request to backend
-      const response = await fetch("https://trymi-backend.onrender.com/api/auth/signup", {
+      const response = await fetch(API_ENDPOINTS.AUTH_SIGNUP, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,13 +157,9 @@ const SignUp = () => {
       localStorage.removeItem("trymi_wishlist");
       console.log("🧹 Fresh cart/wishlist for new account");
 
-      // ✅ FETCH USER'S CART & WISHLIST FROM BACKEND (for new accounts this will be empty)
-      const API_URL = "https://trymi-backend.onrender.com";
-      const userId = userData._id;
-
       // Fetch cart from backend
       try {
-        const cartRes = await fetch(`${API_URL}/api/cart/${userId}`);
+        const cartRes = await fetch(API_ENDPOINTS.CART(userId));
         if (cartRes.ok) {
           const cartData = await cartRes.json();
           if (cartData.success && cartData.items && cartData.items.length > 0) {
@@ -181,7 +178,7 @@ const SignUp = () => {
 
       // Fetch wishlist from backend
       try {
-        const wishRes = await fetch(`${API_URL}/api/wishlist/${userId}`);
+        const wishRes = await fetch(API_ENDPOINTS.WISHLIST(userId));
         if (wishRes.ok) {
           const wishData = await wishRes.json();
           if (wishData.items && wishData.items.length > 0) {

@@ -267,52 +267,65 @@ let emailTransporter;
 let emailEnabled = false;
 
 const initializeEmailService = async () => {
-  console.log("🔍 Checking email configuration...");
-  console.log("EMAIL_USER:", process.env.EMAIL_USER);
-  console.log(
-    "EMAIL_PASSWORD:",
-    process.env.EMAIL_PASSWORD ? "✅ Set" : "❌ Not set",
-  );
+  console.log("\n📧 INITIALIZING EMAIL SERVICE");
+  console.log("=".repeat(30));
+  console.log("User:", process.env.EMAIL_USER);
+  console.log("Pass:", process.env.EMAIL_PASSWORD ? "✅ Set" : "❌ Not set");
 
-  if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.warn("⚠️ EMAIL_USER or EMAIL_PASSWORD not found in .env");
+    return false;
+  }
+
+  // Common transporter options
+  const baseOptions = {
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  };
+
+  const transportConfigs = [
+    // Config 1: Direct Gmail SMTP (Port 465)
+    {
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      ...baseOptions
+    },
+    // Config 2: Gmail Service (Nodemailer built-in)
+    {
+      service: "gmail",
+      ...baseOptions
+    },
+    // Config 3: Direct Gmail SMTP (Port 587)
+    {
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      ...baseOptions
+    }
+  ];
+
+  for (const config of transportConfigs) {
     try {
-      emailTransporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // Use SSL
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-
-      console.log("📧 Verifying email connection...");
+      console.log(`📡 Attempting connection with ${config.host || config.service}:${config.port || 'default'}...`);
+      emailTransporter = nodemailer.createTransport(config);
       await emailTransporter.verify();
       emailEnabled = true;
       console.log("✅ Email service verified and ready!");
-      console.log(`✅ Emails will be sent from: ${process.env.EMAIL_USER}`);
       return true;
     } catch (error) {
-      console.error("❌ Email verification failed:");
-      console.error("  - Message:", error.message);
-      console.error("  - Code:", error.code);
-      console.error("  - Command:", error.command);
-      console.error("💡 Check your EMAIL_USER and EMAIL_PASSWORD in .env");
-      console.error("💡 Make sure 2-Step Verification is enabled on Gmail");
-      console.error(
-        "💡 Use App Password from: https://myaccount.google.com/apppasswords",
-      );
-      return false;
+      console.warn(`⚠️ Connection attempt failed: ${error.message}`);
     }
-  } else {
-    console.warn("⚠️ EMAIL_USER or EMAIL_PASSWORD not found");
-    console.warn("💡 Add to .env: EMAIL_USER=your-email@gmail.com");
-    console.warn("💡 Add to .env: EMAIL_PASSWORD=your-app-password");
-    return false;
   }
+
+  console.error("❌ All email connection attempts failed.");
+  console.error("💡 Check if 'Less Secure Apps' is enabled or use an 'App Password'.");
+  return false;
 };
 
 // ============================================================
@@ -637,6 +650,18 @@ app.get("/api/health", (req, res) => {
     email: emailEnabled ? "enabled" : "disabled",
   });
 });
+
+app.get("/api/auth/email-diagnostics", async (req, res) => {
+  res.json({
+    emailEnabled,
+    hasTransporter: !!emailTransporter,
+    user: process.env.EMAIL_USER ? `${process.env.EMAIL_USER.split('@')[0]}@...` : 'not set',
+    hasPass: !!process.env.EMAIL_PASSWORD,
+    env: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
 
 // ============================================================
 // ✅ EMAIL TEST ENDPOINT (FOR DEBUGGING)

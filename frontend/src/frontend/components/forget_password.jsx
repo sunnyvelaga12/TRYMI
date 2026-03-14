@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from "../config/api";
 import "../styles/forgetpassword.css";
 
 const ForgetPassword = () => {
@@ -75,7 +76,7 @@ const ForgetPassword = () => {
       );
 
       // Call the backend API to send OTP email
-      const response = await fetch("https://trymi-backend.onrender.com/api/auth/send-otp", {
+      const response = await fetch(API_ENDPOINTS.AUTH_SEND_OTP, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +139,7 @@ const ForgetPassword = () => {
     try {
       console.log("📋 Verifying OTP with backend...");
       const response = await fetch(
-        "https://trymi-backend.onrender.com/api/auth/verify-otp",
+        API_ENDPOINTS.AUTH_VERIFY_OTP,
         {
           method: "POST",
           headers: {
@@ -197,7 +198,7 @@ const ForgetPassword = () => {
     try {
       console.log("🔐 Resetting password via backend...");
       const response = await fetch(
-        "https://trymi-backend.onrender.com/api/auth/reset-password",
+        API_ENDPOINTS.AUTH_RESET_PASSWORD,
         {
           method: "POST",
           headers: {
