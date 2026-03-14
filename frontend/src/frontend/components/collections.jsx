@@ -19,6 +19,8 @@ import "../styles/collections.css";
 import useWishlistStore from "../../store/wishlistStore";
 import AtelierLoader from "@core/AtelierLoader.jsx";
 
+const API_URL = "https://trymi-backend.onrender.com";
+
 const Collections = () => {
   const navigate = useNavigate();
   const { category: urlCategory } = useParams();
