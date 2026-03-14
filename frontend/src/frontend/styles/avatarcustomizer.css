@@ -509,20 +509,48 @@
         margin-bottom: 2px;
     }
 
-    /* ✅ Premium Mobile Sidebar & Cards */
-    .customizer-sidebar-header {
-        padding: 16px 20px;
-        background: #FFF;
+    /* ✅ Premium Mobile Sidebar & Cards - Bottom Sheet Style */
+    .customizer-sidebar {
+        width: 100% !important;
+        height: 85vh !important;
+        top: auto !important;
+        bottom: 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        transform: translateY(100%) !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .customizer-sidebar-header h3 {
+    .customizer-sidebar.active {
+        transform: translateY(0) !important;
+    }
+
+    .customizer-sidebar::after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: #E8E8E8;
+        border-radius: 2px;
+    }
+
+    .customizer-sidebar-header {
+        padding: 20px 20px 10px;
+        background: #FFF;
+        border-radius: 24px 24px 0 0;
+    }
+
+    .customizer-sidebar-header h2 {
         font-family: 'Cormorant Garamond', serif;
-        font-size: 20px;
+        font-size: 22px;
         letter-spacing: 1px;
     }
 
     .customizer-sidebar-content {
-        padding: 16px;
+        padding: 10px 16px 40px;
     }
 
     .outfit-grid {
@@ -531,49 +559,46 @@
     }
 
     .outfit-card {
-        padding: 10px;
-        border-radius: 4px;
-        /* Premium sharp edges */
-        border: 0.5px solid #E8E8E8;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #F0F0F0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         align-items: center;
-        background: #FFF;
+        background: #FAFAFA;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .outfit-card.selected {
         border-color: #000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        background: #FFF;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
     .outfit-image {
-        width: 75px;
-        height: 100px;
-        border-radius: 2px;
+        width: 80px;
+        height: 110px;
+        border-radius: 8px;
     }
 
-    .outfit-info {
-        gap: 4px;
+    .outfit-info h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
     }
 
-    .outfit-info h4 {
-        font-size: 12px;
-        font-weight: 500;
-        margin: 0 0 2px 0;
-        letter-spacing: 0.5px;
-    }
-
-    .outfit-info p {
-        font-size: 10px;
-        color: #666;
-        margin: 0;
+    .outfit-description {
+        font-size: 11px !important;
+        line-height: 1.4;
     }
 
     .apply-btn {
-        padding: 8px;
-        font-size: 9px;
-        letter-spacing: 1.5px;
+        padding: 10px;
+        font-size: 10px;
+        letter-spacing: 1px;
         width: 100%;
-        margin-top: 8px;
-        border-radius: 2px;
+        margin-top: 12px;
+        border-radius: 8px;
+        background: #000;
+        font-weight: 600;
     }
-}
+}

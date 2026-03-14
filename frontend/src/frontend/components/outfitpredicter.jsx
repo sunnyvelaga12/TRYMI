@@ -562,7 +562,7 @@ const OutfitPredictor = () => {
         <div className="top-right">
           <button
             className="feedback-banner-btn"
-            onClick={() => navigate("/profile", { state: { activeTab: "feedback" } })}
+            onClick={() => window.dispatchEvent(new CustomEvent("open-feedback"))}
             aria-label="Drop feedback"
           >
             Drop Feedback

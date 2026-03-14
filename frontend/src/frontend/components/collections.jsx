@@ -67,6 +67,10 @@ const Collections = () => {
   // Get current user
   const [currentUser, setCurrentUser] = useState(null);
 
+  // ✅ Fix: Missing refs for fetchProducts
+  const abortControllerRef = useRef(null);
+  const isFirstMountRef = useRef(true);
+
 
 
   const showToast = useCallback((message, type = "success") => {
@@ -541,7 +545,7 @@ const Collections = () => {
           <span className="banner-separator">|</span>
           <button
             className="feedback-banner-btn"
-            onClick={() => navigate("/profile", { state: { activeTab: "feedback" } })}
+            onClick={() => window.dispatchEvent(new CustomEvent("open-feedback"))}
           >
             Drop Feedback!
           </button>

@@ -103,10 +103,12 @@ const ForgetPassword = () => {
         console.log("Generated OTP (fallback):", data.otp);
       }
 
-      showMessage(
-        "success",
-        data.message || "OTP sent successfully! Check your inbox.",
-      );
+      const isEmailSent = data.emailSent;
+      const displayMessage = isEmailSent 
+        ? (data.message || "OTP sent successfully! Check your inbox.")
+        : (data.otp ? `⚠️ Email service unavailable. FOR TESTING, use OTP: ${data.otp}` : "Failed to send OTP.");
+
+      showMessage(isEmailSent ? "success" : "warning", displayMessage);
       setCurrentStep("otp");
       setIsLoading(false);
     } catch (error) {

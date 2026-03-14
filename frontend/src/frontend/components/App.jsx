@@ -11,6 +11,7 @@ import ChatBot from "./ChatBot.jsx";
 // ✅ NEW: Studio CSS Import
 import "../styles/studio.css";
 import AtelierLoader from "@core/AtelierLoader.jsx";
+import FeedbackModal from "./FeedbackModal.jsx";
 
 // All existing components
 const HomePage = React.lazy(() => import("./outfitpredicter.jsx"));
@@ -108,6 +109,14 @@ const globalStyles = `
 
 function App() {
   const location = useLocation();
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  // Helper to open feedback from anywhere
+  useEffect(() => {
+    const handleOpenFeedback = () => setIsFeedbackOpen(true);
+    window.addEventListener("open-feedback", handleOpenFeedback);
+    return () => window.removeEventListener("open-feedback", handleOpenFeedback);
+  }, []);
 
   // ✅ Define pages where chatbot should be hidden
   const hideChatbotPaths = [
@@ -360,6 +369,10 @@ function App() {
 
         {/* ✅ AI Chatbot - Shows on all pages except specified paths */}
         {shouldShowChatbot && <ChatBot />}
+        <FeedbackModal 
+          isOpen={isFeedbackOpen} 
+          onClose={() => setIsFeedbackOpen(false)} 
+        />
       </React.Suspense>
     </>
   );

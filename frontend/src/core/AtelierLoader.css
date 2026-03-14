@@ -151,37 +151,38 @@
 /* Responsive Loader Adjustments */
 @media (max-width: 768px) {
     .loading-logo {
-        font-size: 48px;
-        letter-spacing: 10px;
+        font-size: 64px;
+        letter-spacing: 12px;
+        margin-right: -12px; /* Offset for perfect centering */
     }
 
     .atelier-caption {
-        font-size: 16px;
+        font-size: 18px;
         letter-spacing: 4px;
         padding: 0 20px;
     }
 
     .stitch-progress {
-        width: 220px;
+        width: 260px;
         bottom: 70px;
     }
 }
 
 @media (max-width: 480px) {
     .loading-logo {
-        font-size: 32px;
-        letter-spacing: 6px;
-        margin-left: 6px; /* offset letter-spacing visually */
+        font-size: 48px;
+        letter-spacing: 8px;
+        margin-right: -8px; /* Offset for perfect centering */
     }
 
     .atelier-caption {
-        font-size: 12px;
+        font-size: 14px;
         letter-spacing: 2px;
         padding: 0 15px;
     }
 
     .stitch-progress {
-        width: 160px;
+        width: 180px;
         bottom: 50px;
     }
-}
+}
