@@ -120,6 +120,9 @@ const StudioLanding = () => {
               <video
                 controls
                 autoPlay
+                muted
+                playsInline
+                loop
                 style={{
                   position: "absolute",
                   top: 0,
