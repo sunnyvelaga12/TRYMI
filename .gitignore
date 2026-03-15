@@ -29,7 +29,8 @@ debug_log.txt
 audit_log.txt
 
 # Large files
-*.mp4
+# *.mp4
+!frontend/public/assets/videos/tryon_demo.mp4
 *.glb
 *.fbx
 
